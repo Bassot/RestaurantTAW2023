@@ -1,0 +1,41 @@
+<div class="container" style="width: 400px; margin-top: 20px;">
+  <h2>Register</h2>
+  <div class="form-floating mb-3">
+    <input class="form-control" type="text" #email id="email" placeholder="email" required>
+    <label for="email">Email</label>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input class="form-control" type="text" #username id="username" placeholder="username" required>
+    <label for="username">Username</label>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input class="form-control" type="password" #password id="password" placeholder="password" required>
+    <label for="username">Password</label>
+  </div>
+
+  <div class="mb-3">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" #waiter name="role" id="role-waiters">
+      <label class="form-check-label" for="role-waiters">Waiter</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" #cook name="role" id="role-cook">
+      <label class="form-check-label" for="role-cook">Cook</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" #bartender name="role" id="role-bartender">
+      <label class="form-check-label" for="role-bartender">Bartender</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" #cashier name="role" id="role-cashier">
+      <label class="form-check-label" for="role-cashier">Cashier</label>
+    </div>
+  </div>
+
+  <button class="btn btn-primary"
+          (click)="signUp(email.value, password.value, username.value,waiter.checked ? 'Waiter':(cook.checked ? 'Cook':(bartender.checked ? 'Bartender': (cashier.checked ? 'Cashier':''))))
+          ">Sign Up
+  </button>
+</div>
