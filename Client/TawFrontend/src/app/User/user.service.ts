@@ -23,29 +23,29 @@ export function getToken(){
 export class UserService {
   private url = 'http://localhost:8080';
   private token: string = '';
-  private headers: HttpHeaders;
+  private headers: HttpHeaders = new HttpHeaders();
   private users$: Subject<User[]> = new Subject();
 
   constructor(private http: HttpClient) {
-    this.headers = new HttpHeaders({
-      'Authentication' : 'Bearer ' + this.getToken(),
-      'cache-control': 'no-cache',
-      'Content-Type':  'application/json'
-    });
     const loadedToken = localStorage.getItem('auth_jwt');
     if (!loadedToken || loadedToken.length < 1) {
       console.log("No token found in local storage");
-    } else {
+    }
+    else {
       this.token = loadedToken as string;
       tokenForExport = this.token;
       console.log("JWT loaded from local storage.")
     }
+    this.refreshHeaders();
   }
 
-  getOptions(){
-    return {
-      headers: this.headers
-    };
+  // in this class we must define this method. Token is generated after login
+  private refreshHeaders(){
+    this.headers = new HttpHeaders({
+      'Authorization' : 'Bearer ' + this.token,
+      'cache-control': 'no-cache',
+      'Content-Type':  'application/json'
+    });
   }
 
   signIn(curUser: Auth, remember: boolean) {
@@ -56,6 +56,7 @@ export class UserService {
         this.token = (res as ReceivedToken).token as string;
         tokenForExport = this.token;
         console.log('Token : ' + this.token);
+        this.refreshHeaders();
         if (remember) {
           localStorage.setItem('auth_jwt', this.token);
           console.log('Token saved in local storage');
@@ -74,24 +75,22 @@ export class UserService {
     console.log('Logged out');
   }
 
-  getUsers() {
-    this.http.get<User[]>(`${this.url}/users`, {
-      headers: this.headers
-    });
+  getUsers(): Observable<User[]>{
+    console.log('TOKEN: '+ this.token)
+    return this.http.get<User[]>(`${this.url}/users`, { headers: this.headers });
   }
 
   createUser(user: User) {
-    return this.http.post(`${this.url}/signup`, user, this.getOptions());
+    return this.http.post(`${this.url}/signup`, user, {headers: this.headers});
   }
-  //TODO: updating auth rules
-  deleteUser(username: string): Observable<string> {
-    return this.http.delete(`${this.url}/users/${username}`, {responseType: 'text'});
+  deleteUser(email: string): Observable<any> {
+    return this.http.delete(`${this.url}/users/${email}`, {headers: this.headers});
   }
   getUser(username: string): Observable<User> {
     return this.http.get<User>(`${this.url}/users/${username}`);
   }
-  updateUser(username: string, user: User): Observable<string> {
-    return this.http.put(`${this.url}/users/${username}`, user, {responseType: 'text'});
+  updateUser(email: string, user: User): Observable<any> {
+    return this.http.put(`${this.url}/users/${email}`, user, {headers: this.headers});
   }
   public getToken(){
     return this.token;

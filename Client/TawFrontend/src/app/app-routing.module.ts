@@ -9,6 +9,7 @@ import {HomeComponent} from "./home/home.component";
 import {CashierComponent} from "./cashier/cashier.component";
 import {ItemsMenuComponent} from "./items-menu/items-menu.component";
 import {ordersStatusComponent} from "./orders-status/orders-status.component";
+import {UsersListComponent} from "./users-list/users-list.component";
 
 
 
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'bartenders', component: BartenderComponent },
   { path: 'waiters', component: WaiterComponent },
   { path: 'menu', component: ItemsMenuComponent },
-  { path: 'orders', component: ordersStatusComponent }
+  { path: 'orders', component: ordersStatusComponent },
+  { path: 'userslist', component: UsersListComponent }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

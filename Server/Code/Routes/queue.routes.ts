@@ -1,10 +1,6 @@
 import * as queue_item from "../Models/Queue_Item"
 import colors = require('colors');
-
 import {ios} from '../index';
-import {Queue_Item} from "../Models/Queue_Item";
-import {makeReceiptPDF} from "../Services/pdfService";
-
 colors.enabled = true;
 const express = require('express');
 

@@ -17,6 +17,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ItemsMenuComponent} from "./items-menu/items-menu.component";
 import {ItemService} from "./Item/item.service";
 import {ordersStatusComponent} from "./orders-status/orders-status.component";
+import { UsersListComponent } from './users-list/users-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +31,7 @@ import {ordersStatusComponent} from "./orders-status/orders-status.component";
     WaiterComponent,
     ItemsMenuComponent,
     ordersStatusComponent,
+    UsersListComponent,
   ],
     imports: [
         BrowserModule,

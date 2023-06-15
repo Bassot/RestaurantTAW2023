@@ -228,4 +228,9 @@ export class CashierComponent implements OnInit {
       });
     }
   }
+
+  // routing
+  navToUsersList(){
+    this.router.navigate(['/userslist']);
+  }
 }

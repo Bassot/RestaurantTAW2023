@@ -1,25 +1,16 @@
 import * as user from "../Models/User";
-import express from "express";
+const express = require('express');
 
 export const userRouter = express.Router();
-
-
+//TODO: updating responses
+userRouter.get("/", (req, res) => {
+    user.getModel().find({}).then((users) => {
+        res.status(200).json(users);
+    }).catch((err) => {
+        res.status(500).send('Error getting user: ' + err);
+    });
+});
 /*
-userRouter.use(function (req: any, res) {
-    if (!req.auth.isadmin) return res.sendStatus(401);
-    res.sendStatus(200);
-});
- */
-userRouter.get("/", async (req, res) => {
-    try {
-        let users = await user.getModel().find({});
-        res.status(200).send(JSON.stringify(users));
-        }
-    catch (error :any) {
-        res.status(500).send(error.message);
-    }
-});
-
 userRouter.get("/:id", async (req, res) => {
     try {
         const username = req?.params?.id;
@@ -36,26 +27,25 @@ userRouter.get("/:id", async (req, res) => {
     }
 });
 
-userRouter.put("/:username", async (req, res) => {
-    const username = req?.params?.username;
+ */
+userRouter.put("/:email", async (req, res) => {
+    const email = req?.params?.email;
     const updateduser = req.body;
     try {
-        let users = await user.getModel().findOneAndUpdate({username: username}, {$set: updateduser});
+        let users = await user.getModel().findOneAndUpdate({email: email}, {$set: updateduser});
         res.status(200).send(JSON.stringify(users));
-    }
-    catch (error :any) {
+    } catch (error: any) {
         res.status(500).send(error.message);
     }
 });
 
-userRouter.delete("/:username", async (req, res) => {
-    const username = req?.params?.username;
-    try {
-        let users = await user.getModel().deleteOne({username: username});
-        res.status(200).send(JSON.stringify(users));
-    }
-    catch (error :any) {
-        res.status(500).send(error.message);
-    }
+userRouter.delete("/:email", (req, res) => {
+    const email = req?.params?.email;
+    user.getModel().deleteOne({email: email}).then((user) => {
+        res.status(200).json(user);
+    }).catch((err) => {
+        res.status(500).json({error: true, errormessage: "Invalid email, err: " + err});
+    });
+
 });
 
