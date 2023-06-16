@@ -41,10 +41,12 @@ exports.tablesRouter.get("/", (req, res) => {
     else {
         user.getModel().findOne({ email: req.query.email }).then((user) => {
             if (user) {
-                table.getModel().find({ $or: [
+                table.getModel().find({
+                    $or: [
                         { waiter: user._id },
                         { isFree: true }
-                    ] }).sort({ number: 1 }).then((tables) => {
+                    ]
+                }).sort({ number: 1 }).then((tables) => {
                     res.status(200).json(tables);
                 });
             }
@@ -52,6 +54,35 @@ exports.tablesRouter.get("/", (req, res) => {
             res.status(500).send('DB error: ' + err);
         });
     }
+});
+exports.tablesRouter.post("/", (req, res) => {
+    if (req.body.number == undefined || req.body.seats == undefined)
+        return res.status(500).json({ error: true, errormessage: "Given Params are not correct" });
+    let t = {
+        number: req.body.number,
+        seats: req.body.seats,
+        isFree: true,
+        bill: 0
+    };
+    table.newTable(t).save().then((table) => {
+        notify();
+        return res.status(200).json({ error: false, errormessage: "", id: table._id });
+    }).catch((err) => {
+        return res.status(500).json({ error: true, errormessage: "DB error: " + err });
+    });
+});
+exports.tablesRouter.delete('/:tableid', (req, res) => {
+    table.getModel().deleteOne({ table: req.params.tableid }).then((table) => {
+        if (table.deletedCount > 0) {
+            notify();
+            return res.status(200).json({ error: false, errormessage: "" });
+        }
+        else
+            return res.status(404).json({ error: true, errormessage: "Invalid table id" });
+    }).catch((err) => {
+        return res.status(404).json({ error: true, errormessage: "Mongo error: " + err });
+    });
+    console.log('DELETE request for items related to table: ' + req.params.tableid);
 });
 exports.tablesRouter.put("/:number", (req, res) => {
     user.getModel().findOne({ email: req.query.email }).then((user) => {
@@ -74,9 +105,9 @@ exports.tablesRouter.put("/:number", (req, res) => {
                 };
             table.getModel().findOneAndUpdate(filter, update, { new: true }).then((table) => {
                 notify();
-                res.status(200).send("Ok, table occupied: " + table);
+                return res.status(200).send("Ok, table occupied: " + table);
             }).catch((err) => {
-                res.status(500).send('DB error: ' + err);
+                return res.status(500).send('DB error: ' + err);
             });
         }
         else {
