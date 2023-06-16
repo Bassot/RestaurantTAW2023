@@ -23,11 +23,16 @@ export class ItemService {
   getItems(): Observable<Item[]>{
     return this.httpClient.get<Item[]>(`${this.url}`, { headers: this.headers});
   }
-  deleteItem(){
-    return this.httpClient.delete(`${this.url}`, { headers: this.headers});
+  deleteItem(name: string){
+    return this.httpClient.delete(`${this.url}/${name}`, { headers: this.headers});
   }
-  createItem(){
-    return this.httpClient.post(`${this.url}`, { headers: this.headers});
+  createItem(name: string, type: string, price: number){
+    const params = {
+      name: name,
+      type: type,
+      price: price
+    };
+    return this.httpClient.post(`${this.url}`, params,{ headers: this.headers});
   }
 
 }

@@ -233,6 +233,9 @@ export class CashierComponent implements OnInit {
   navToUsersList(){
     this.router.navigate(['/userslist']);
   }
+  navToItemsList(){
+    this.router.navigate(['/itemslist']);
+  }
   navToTablesList(){
     this.router.navigate(['/tableslist']);
   }

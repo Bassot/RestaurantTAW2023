@@ -9,12 +9,10 @@ import {User} from "../User/user";
 })
 export class UserSignupComponent {
 
-  isCashier :boolean = false;
   constructor(private router: Router, public userService: UserService) {}
   ngOnInit(): void {
-    if(this.userService.getRole() == 'Cashier'){
-      this.isCashier=true;
-    }
+    if (this.userService.getRole() != 'Cashier')
+      this.router.navigate(['/']);
   }
   signUp(email: string, password: string, username: string, role: string){
     const user: User = {

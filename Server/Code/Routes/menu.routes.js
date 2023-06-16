@@ -36,12 +36,13 @@ exports.menuRouter.get("/", (req, res) => {
     });
 });
 exports.menuRouter.delete("/:name", (req, res) => {
-    if (req.params.name == undefined)
+    let name = req.params.name;
+    if (name == undefined)
         return res.status(500).json({ error: true, errormessage: 'Given params are not correct' });
-    item.getModel().find({}).then((items) => {
+    item.getModel().deleteOne({ name: name }).then((items) => {
         return res.status(200).json(items);
     }).catch((err) => {
-        res.status(500).send('DB error: ' + err);
+        return res.status(500).send('DB error: ' + err);
     });
 });
 exports.menuRouter.post("/", (req, res) => {

@@ -39,8 +39,4 @@ export class UserLoginComponent implements OnInit {
       }
     });
   }
-
-  navToSignUp() {
-    this.router.navigate(['/signup']);
-  }
 }
