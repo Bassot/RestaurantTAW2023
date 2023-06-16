@@ -43,8 +43,8 @@ export class TableService {
       responseType: 'text'
     });
   }
-  freeTable(number: any, email: string){
-    const params = new HttpParams().set('action', "free").set('email', email);
+  freeTable(number: any){
+    const params = new HttpParams().set('action', "free");
     return this.httpClient.put(`${this.url}/tables/${number}`, null, {
       headers: this.headers,
       params: params,

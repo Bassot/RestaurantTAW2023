@@ -9,7 +9,7 @@ export interface Table extends mongoose.Document {
     isFree: boolean,
     bill: number,
 
-    waiter: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    waiter: string,
     occupyTable: ()=>void,
     freeTable: ()=>void
 }
@@ -41,7 +41,7 @@ var userSchema = new mongoose.Schema<Table>( {
     },
     waiter:
         {
-            type: mongoose.Schema.Types.ObjectId, ref: 'User',
+            type: mongoose.SchemaTypes.String,
         }
 
 })
