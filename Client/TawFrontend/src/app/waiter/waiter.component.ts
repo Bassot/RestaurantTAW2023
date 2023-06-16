@@ -45,6 +45,7 @@ import {Router} from "@angular/router";
 })
 export class WaiterComponent implements OnInit {
   tables: Table[] = [];
+  notifications: string[] = [];
   constructor(private tablesService: TableService,
               private socketService: SocketioService,
               private userService: UserService,
@@ -56,7 +57,7 @@ export class WaiterComponent implements OnInit {
     this.fetchTables();
     this.socketService.connectTables().subscribe((m)=>{
       this.fetchTables();
-    })
+    });
   }
 
   private fetchTables(): void {
@@ -70,11 +71,14 @@ export class WaiterComponent implements OnInit {
       }
     });
   }
-
   occupyTable(number: any): void {
     this.tablesService.occupyTable(number,this.userService.getEmail() ).subscribe({
       next: (str) => console.log('Ok table '+number+' occupied'),
       error: (err) => console.log('Error occupying table: ' + JSON.stringify(err))
     });
+  }
+
+  private fetchNotifications(){
+
   }
 }
