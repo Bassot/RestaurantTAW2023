@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../User/user.service";
 import {User} from "../User/user";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-users-list',
@@ -9,9 +10,12 @@ import {User} from "../User/user";
 })
 export class UsersListComponent implements OnInit{
   users: User[] = [];
-  constructor(private userService: UserService) {}
+  visualizeOptions: boolean[] = [];
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
+    if (this.userService.getRole() != 'Cashier')
+      this.router.navigate(['/']);
     this.getUsers();
   }
   getUsers(){
@@ -34,7 +38,7 @@ export class UsersListComponent implements OnInit{
       });
     }
   }
-  updateUser(email: string){
-
+  navToSignUp(){
+    this.router.navigate(['/signup']);
   }
 }

@@ -16,7 +16,6 @@
       <td>{{user.username}}</td>
       <td>{{user.role}}</td>
       <td>
-        <button class="btn btn-primary" style="margin-right: 10px">Update</button>
         <button class="btn btn-danger" (click)="deleteUser(user.email)">Delete</button>
       </td>
     </tr>
@@ -24,7 +23,7 @@
   </table>
   <div style="margin-top: 50px; margin-bottom: 30px">
     <div style="margin: 10px">
-      <button class="btn btn-success">Add user</button>
+      <button class="btn btn-success" (click)="navToSignUp()">Add user</button>
     </div>
   </div>
 </div>

@@ -18,6 +18,7 @@ import {ItemsMenuComponent} from "./items-menu/items-menu.component";
 import {ItemService} from "./Item/item.service";
 import {ordersStatusComponent} from "./orders-status/orders-status.component";
 import { UsersListComponent } from './users-list/users-list.component';
+import { TablesListComponent } from './tables-list/tables-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +33,7 @@ import { UsersListComponent } from './users-list/users-list.component';
     ItemsMenuComponent,
     ordersStatusComponent,
     UsersListComponent,
+    TablesListComponent,
   ],
     imports: [
         BrowserModule,

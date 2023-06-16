@@ -19,11 +19,21 @@ export class TableService {
     });
   }
 
-  getTables(waiter?: string) {
+  getTables(waiter?: string): Observable<Table[]>{
     if(waiter!=undefined){
-      return this.httpClient.get(`${this.url}/tables`, { headers: this.headers, params: new HttpParams().set('email', waiter)});
+      return this.httpClient.get<Table[]>(`${this.url}/tables`, { headers: this.headers, params: new HttpParams().set('email', waiter)});
     }
-    return this.httpClient.get(`${this.url}/tables`, { headers: this.headers});
+    return this.httpClient.get<Table[]>(`${this.url}/tables`, { headers: this.headers});
+  }
+  createTable(number: number, seats: number){
+    const params = {
+      number: number,
+      seats: seats
+    }
+    return this.httpClient.post(this.url, params, { headers: this.headers});
+  }
+  deleteTable(number: number){
+    return this.httpClient.delete(this.url+'/'+number,{ headers: this.headers});
   }
   occupyTable(number: any, email: string){
     const params = new HttpParams().set('action', "occupy").set('email', email);
