@@ -16,11 +16,15 @@
       <td></td>
       <td>{{item.name}}</td>
       <td>{{item.timestamp | date:'short'}}</td>
-      <td>
-        <button class="btn btn-primary" (click)="updateItemStatus(item._id, 'Preparing')"
+      <td *ngIf="item.status != 'Ready'">
+        <button class="btn btn-primary" *ngIf="item.status == 'Pending'"
+                (click)="updateItemStatus(item._id, 'Preparing')"
                 style="margin-right: 10px">Start</button>
-        <button class="btn btn-success" (click)="updateItemStatus(item._id, 'Ready')">Ready</button>
+        <button class="btn btn-success"
+                *ngIf="item.status == 'Preparing'"
+                (click)="updateItemStatus(item._id, 'Ready')">Ready</button>
       </td>
+      <td *ngIf="item.status == 'Ready'">Item is ready</td>
       <td>{{item.status}}</td>
     </tr>
     </tbody>

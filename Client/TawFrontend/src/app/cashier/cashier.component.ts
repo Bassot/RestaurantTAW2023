@@ -207,7 +207,7 @@ export class CashierComponent implements OnInit {
   freeTableAndItems(tableNum: number, tableBill: number) {
     if (confirm("Are you sure to free table " + tableNum + ", its related items and to store the receipt?")) {
       if (!this.isEveryTableItemReady(tableNum)) {
-        alert('There are still some items not ready in the table ' + tableNum + ", you can' t free the table. Ping the cooks");
+        alert('There are still some items not ready in the table ' + tableNum + ", you can' t free the table. Ping the cooks or the bartenders");
         return;
       }
 

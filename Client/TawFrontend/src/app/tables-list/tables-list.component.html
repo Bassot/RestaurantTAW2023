@@ -6,6 +6,7 @@
       <th>Table</th>
       <th>Seats</th>
       <th>Status</th>
+      <th>Actions</th>
     </tr>
     </thead>
 
@@ -15,9 +16,10 @@
       <td>{{table.seats}}</td>
       <td *ngIf="table.isFree">Free</td>
       <td *ngIf="!table.isFree">Occupied</td>
-      <td>
+      <td *ngIf="table.isFree">
         <button class="btn btn-danger" (click)="deleteTable(table.number, table.isFree)">Delete</button>
       </td>
+      <td *ngIf="!table.isFree">free the table to delete it</td>
     </tr>
     </tbody>
   </table>

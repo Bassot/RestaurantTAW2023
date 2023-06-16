@@ -8,7 +8,7 @@ import {UserService} from "../User/user.service";
   providedIn: 'root'
 })
 export class TableService {
-  private url = 'http://localhost:8080/table';
+  private url = 'http://localhost:8080/tables';
 
   private headers: HttpHeaders;
   constructor(private httpClient: HttpClient, private userService: UserService) {
