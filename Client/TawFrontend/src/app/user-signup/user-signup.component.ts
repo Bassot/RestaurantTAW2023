@@ -15,6 +15,10 @@ export class UserSignupComponent {
       this.router.navigate(['/']);
   }
   signUp(email: string, password: string, username: string, role: string){
+    if(email == '' || password == '' || username == '' || role == ''){
+      alert('Params are not correct');
+      return;
+    }
     const user: User = {
       email: email,
       password: password,
@@ -24,7 +28,7 @@ export class UserSignupComponent {
     return this.userService.createUser(user).subscribe({
       next: (res) => {
         console.log('User signed up, res: ' + JSON.stringify(res));
-        this.router.navigate(['/login']);
+        this.router.navigate(['/userslist']);
       },
       error: (err) => {
         if(err.status==403){

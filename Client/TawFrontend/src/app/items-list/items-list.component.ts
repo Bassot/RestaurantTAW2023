@@ -33,7 +33,7 @@ export class ItemsListComponent implements OnInit {
   }
 
   deleteItem(name: string) {
-    if(confirm('Do you really want to delete '+name+' ?')) {
+    if(confirm('Do you really want to delete '+name+'? This will not delete item in queue')) {
       this.itemService.deleteItem(name).subscribe({
         next: (item) => {
           console.log('Item deleted');

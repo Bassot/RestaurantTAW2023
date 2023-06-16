@@ -81,7 +81,7 @@ export class UserService {
   }
 
   createUser(user: User){
-    return this.http.post(`${this.url}/signup`, user, {headers: this.headers});
+    return this.http.post(`${this.url}/users`, user, {headers: this.headers});
   }
   deleteUser(email: string): Observable<any> {
     return this.http.delete(`${this.url}/users/${email}`, {headers: this.headers});

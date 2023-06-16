@@ -44,6 +44,18 @@ exports.userRouter.get("/", (req, res) => {
         res.status(500).send('Error getting user: ' + err);
     });
 });
+exports.userRouter.post("/", (req, res) => {
+    let u = user.newUser(req.body);
+    u.setPassword(req.body.password);
+    u.setAdmin(false);
+    u.save().then((data) => {
+        return res.status(200).json({ error: false, errormessage: "", id: data._id });
+    }).catch((reason) => {
+        if (reason.code === 11000)
+            return res.status(403).json({ error: true, errormessage: "User already exists" });
+        return res.status(404).json({ error: true, errormessage: "DB error: " + reason.errmsg });
+    });
+});
 /*
 userRouter.get("/:id", async (req, res) => {
     try {
