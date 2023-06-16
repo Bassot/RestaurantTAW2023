@@ -8,7 +8,14 @@ import {User} from "../User/user";
   styleUrls: ['./user-signup.component.css']
 })
 export class UserSignupComponent {
-  constructor(private router: Router, private userService: UserService) {}
+
+  isCashier :boolean = false;
+  constructor(private router: Router, public userService: UserService) {}
+  ngOnInit(): void {
+    if(this.userService.getRole() == 'Cashier'){
+      this.isCashier=true;
+    }
+  }
   signUp(email: string, password: string, username: string, role: string){
     const user: User = {
       email: email,
@@ -22,6 +29,9 @@ export class UserSignupComponent {
         this.router.navigate(['/login']);
       },
       error: (err) => {
+        if(err.status==403){
+          alert("User already exists!");
+        }
         console.log('Sign up error: ' + JSON.stringify(err));
       }
     });

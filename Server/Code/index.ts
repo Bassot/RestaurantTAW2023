@@ -66,7 +66,7 @@ app.post('/login', (req, res, next) => {
 
     user.getModel().findOne({email: email}).then((user) => {
         if (!user) {
-            return next({statusCode: 500, error: true, errormessage: "Invalid user"});
+            return next({statusCode: 401, error: true, errormessage: "Invalid user"});
         }
         if (user.validatePassword(password)) {
             let tokendata = {
@@ -90,7 +90,7 @@ app.post('/login', (req, res, next) => {
                 token: token_signed
             });
         }
-        return next({statusCode: 500, error: true, errormessage: "Invalid password"});
+        return next({statusCode: 401, error: true, errormessage: "Invalid password"});
     });
 });
 
@@ -103,7 +103,7 @@ app.post("/signup", (req, res) => {
         return res.status(200).json({error: false, errormessage: "", id: data._id});
     }).catch((reason) => {
         if (reason.code === 11000)
-            return res.status(404).json({error: true, errormessage: "User already exists"});
+            return res.status(403).json({error: true, errormessage: "User already exists"});
         return res.status(404).json({error: true, errormessage: "DB error: " + reason.errmsg});
     });
 });

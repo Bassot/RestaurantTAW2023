@@ -80,7 +80,7 @@ export class UserService {
     return this.http.get<User[]>(`${this.url}/users`, { headers: this.headers });
   }
 
-  createUser(user: User) {
+  createUser(user: User){
     return this.http.post(`${this.url}/signup`, user, {headers: this.headers});
   }
   deleteUser(email: string): Observable<any> {

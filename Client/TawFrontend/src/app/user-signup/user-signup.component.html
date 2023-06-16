@@ -1,5 +1,6 @@
 <div class="container" style="width: 400px; margin-top: 20px;">
-  <h2>Register</h2>
+  <h1  *ngIf="this.isCashier==true">Add user</h1>
+  <h2  *ngIf="this.isCashier==false">Signup</h2>
   <div class="form-floating mb-3">
     <input class="form-control" type="text" #email id="email" placeholder="email" required>
     <label for="email">Email</label>
@@ -33,9 +34,13 @@
       <label class="form-check-label" for="role-cashier">Cashier</label>
     </div>
   </div>
-
-  <button class="btn btn-primary"
+  <button *ngIf="this.isCashier==true" button class="btn btn-primary"
+              (click)="signUp(email.value, password.value, username.value,waiter.checked ? 'Waiter':(cook.checked ? 'Cook':(bartender.checked ? 'Bartender': (cashier.checked ? 'Cashier':''))))
+          ">Add user
+  </button>
+  <button *ngIf="this.isCashier==false" button class="btn btn-primary"
           (click)="signUp(email.value, password.value, username.value,waiter.checked ? 'Waiter':(cook.checked ? 'Cook':(bartender.checked ? 'Bartender': (cashier.checked ? 'Cashier':''))))
           ">Sign Up
   </button>
+
 </div>

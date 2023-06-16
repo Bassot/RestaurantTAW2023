@@ -33,7 +33,9 @@ export class UserLoginComponent implements OnInit {
         this.home.navToHome();
       },
       error: (err) => {
-        alert(('Login error: ' + JSON.stringify(err)));
+        if(err.status==401){
+          alert("Invalid user credentials!");
+        }
       }
     });
   }

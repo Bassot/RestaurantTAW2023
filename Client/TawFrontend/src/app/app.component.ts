@@ -12,11 +12,18 @@ export class AppComponent {
   title = 'TawFrontend';
   loginNav: string = '';
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(public userService: UserService, private router: Router) {}
 
   navToLogin(){
     this.router.navigate(['/login']);
   }
+
+  navToSignup(){
+    this.router.navigate(['/signup']);
+  }
+
+
+
   logout(){
     this.userService.logOut();
     this.router.navigate(['/']);
