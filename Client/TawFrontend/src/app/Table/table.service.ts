@@ -8,7 +8,7 @@ import {UserService} from "../User/user.service";
   providedIn: 'root'
 })
 export class TableService {
-  private url = 'http://localhost:8080';
+  private url = 'http://localhost:8080/tables';
 
   private headers: HttpHeaders;
   constructor(private httpClient: HttpClient, private userService: UserService) {
@@ -21,9 +21,9 @@ export class TableService {
 
   getTables(waiter?: string): Observable<Table[]>{
     if(waiter!=undefined){
-      return this.httpClient.get<Table[]>(`${this.url}/tables`, { headers: this.headers, params: new HttpParams().set('email', waiter)});
+      return this.httpClient.get<Table[]>(`${this.url}`, { headers: this.headers, params: new HttpParams().set('email', waiter)});
     }
-    return this.httpClient.get<Table[]>(`${this.url}/tables`, { headers: this.headers});
+    return this.httpClient.get<Table[]>(`${this.url}`, { headers: this.headers});
   }
   createTable(number: number, seats: number){
     const params = {
@@ -37,7 +37,7 @@ export class TableService {
   }
   occupyTable(number: any, email: string){
     const params = new HttpParams().set('action', "occupy").set('email', email);
-    return this.httpClient.put(`${this.url}/tables/${number}`, null, {
+    return this.httpClient.put(`${this.url}/${number}`, null, {
       headers: this.headers,
       params: params,
       responseType: 'text'
@@ -45,7 +45,7 @@ export class TableService {
   }
   freeTable(number: any, email: string){
     const params = new HttpParams().set('action', "free").set('email', email);
-    return this.httpClient.put(`${this.url}/tables/${number}`, null, {
+    return this.httpClient.put(`${this.url}/${number}`, null, {
       headers: this.headers,
       params: params,
       responseType: 'text',

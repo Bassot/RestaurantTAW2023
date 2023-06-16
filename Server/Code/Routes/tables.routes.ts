@@ -48,7 +48,7 @@ tablesRouter.post("/", (req, res) => {
 });
 
 tablesRouter.delete('/:tableid', (req, res) => {
-    table.getModel().deleteOne({table: req.params.tableid}).then((table) => {
+    table.getModel().deleteOne({number: req.params.tableid}).then((table) => {
         if (table.deletedCount > 0) {
             notify();
             return res.status(200).json({error: false, errormessage: ""});

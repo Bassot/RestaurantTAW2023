@@ -23,7 +23,19 @@
   </table>
   <div style="margin-top: 50px; margin-bottom: 30px">
     <div style="margin: 10px">
-      <button class="btn btn-success" (click)="createTable(0, 0)">Add Table</button>
+      <button class="btn btn-success" *ngIf="!showOptions" (click)="showOptions=true">Create Table</button>
+      <button class="btn btn-success" *ngIf="showOptions" (click)="showOptions=false">Hide Options</button>
+    </div>
+    <div *ngIf="showOptions" style="margin-top: 30px; margin-bottom: 30px; width: 250px;">
+      <div class="form-floating mb-3">
+        <input class="form-control" type="text" #number id="number" placeholder="number" required>
+        <label for="number">Number (it must be unique!)</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input class="form-control" type="text" #seats id="seats" placeholder="number" required>
+        <label for="seats">Seats</label>
+      </div>
+      <button class="btn btn-primary" (click)="createTable(number.value, seats.value)">Add Table</button>
     </div>
   </div>
 </div>
