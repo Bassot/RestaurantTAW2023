@@ -22,43 +22,40 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.menuRouter = void 0;
 const item = __importStar(require("../Models/Item"));
-const dotenv = require('dotenv').config();
 const express = require('express');
-/*
-if (dotenv.error) {
-    console.log("Unable to load \".env\" file. Please provide one to store the JWT secret key".red);
-    process.exit(-1);
-} else if (!process.env.JWT_SECRET) {
-    console.log("\".env\" file loaded but JWT_SECRET=<secret> key-value pair was not found".red);
-    process.exit(-1);
-}
-
-/*
-userRouter.use(function (req: any, res) {
-    if (!req.auth.isadmin) return res.sendStatus(401);
-    res.sendStatus(200);
-});
- */
 exports.menuRouter = express.Router();
 //tablesRouter.use(express.json());
-exports.menuRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let items = yield item.getModel().find({});
-        res.status(200).send(JSON.stringify(items));
+exports.menuRouter.get("/", (req, res) => {
+    item.getModel().find({}).then((items) => {
+        return res.status(200).json(items);
+    }).catch((err) => {
+        res.status(500).send('DB error: ' + err);
+    });
+});
+exports.menuRouter.delete("/:name", (req, res) => {
+    if (req.params.name == undefined)
+        return res.status(500).json({ error: true, errormessage: 'Given params are not correct' });
+    item.getModel().find({}).then((items) => {
+        return res.status(200).json(items);
+    }).catch((err) => {
+        res.status(500).send('DB error: ' + err);
+    });
+});
+exports.menuRouter.post("/", (req, res) => {
+    if (req.body.name == undefined || req.body.price == undefined || (req.body.type != 'Dish' && req.body.type != 'Drink')) {
+        return res.status(500).json({ error: true, errormessage: 'Given params are not correct' });
     }
-    catch (error) {
-        res.status(500).send(error.message);
-    }
-}));
+    const i = {
+        name: req.body.name,
+        type: req.body.type,
+        price: req.body.price
+    };
+    item.newItem(i).save().then((item) => {
+        return res.status(200).json(item);
+    }).catch((err) => {
+        return res.status(500).send('DB error: ' + err);
+    });
+});

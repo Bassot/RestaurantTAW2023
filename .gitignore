@@ -3,6 +3,7 @@ Server/Code/node_modules/*
 Server/data/*
 Server/Code/index.js
 Server/Code/Models/*.js
+Server/Code/Routes/*.routes.js
 Server/Code/Routes/*.js
 Server/Code/Services/*.js
 

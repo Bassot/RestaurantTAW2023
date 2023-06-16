@@ -1,32 +1,39 @@
 import * as item from "../Models/Item";
-import {expressjwt as jwt} from "express-jwt";
-const dotenv = require('dotenv').config();
+import {Item} from "../Models/Item";
+
 const express = require('express');
 
-/*
-if (dotenv.error) {
-    console.log("Unable to load \".env\" file. Please provide one to store the JWT secret key".red);
-    process.exit(-1);
-} else if (!process.env.JWT_SECRET) {
-    console.log("\".env\" file loaded but JWT_SECRET=<secret> key-value pair was not found".red);
-    process.exit(-1);
-}
-
-/*
-userRouter.use(function (req: any, res) {
-    if (!req.auth.isadmin) return res.sendStatus(401);
-    res.sendStatus(200);
-});
- */
 export const menuRouter = express.Router();
 //tablesRouter.use(express.json());
-menuRouter.get("/", async (req, res) => {
-    try {
-        let items = await item.getModel().find({});
-        res.status(200).send(JSON.stringify(items));
+menuRouter.get("/", (req, res) => {
+    item.getModel().find({}).then((items) => {
+        return res.status(200).json(items);
+    }).catch((err) => {
+        res.status(500).send('DB error: ' + err);
+    });
+});
+menuRouter.delete("/:name", (req, res) => {
+    if (req.params.name == undefined)
+        return res.status(500).json({error: true, errormessage: 'Given params are not correct'});
+    item.getModel().find({}).then((items) => {
+        return res.status(200).json(items);
+    }).catch((err) => {
+        res.status(500).send('DB error: ' + err);
+    });
+});
+menuRouter.post("/", (req, res) => {
+    if (req.body.name == undefined || req.body.price == undefined || (req.body.type != 'Dish' && req.body.type != 'Drink')) {
+        return res.status(500).json({error: true, errormessage: 'Given params are not correct'});
     }
-    catch (error :any) {
-        res.status(500).send(error.message);
+    const i = {
+        name: req.body.name,
+        type: req.body.type,
+        price: req.body.price
     }
+    item.newItem(i).save().then((item) => {
+        return res.status(200).json(item);
+    }).catch((err) => {
+        return res.status(500).send('DB error: ' + err);
+    });
 });
 

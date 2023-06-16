@@ -8,7 +8,7 @@ import {UserService} from "../User/user.service";
   providedIn: 'root'
 })
 export class ItemService {
-  private url = 'http://localhost:8080';
+  private url = 'http://localhost:8080/menu';
   private headers: HttpHeaders;
   private items$: Subject<Item[]> = new Subject();
 
@@ -20,15 +20,14 @@ export class ItemService {
       'Content-Type':  'application/json'
     })
   }
-  private refreshItems() {
-    this.httpClient.get<Item[]>(`${this.url}/menu`, { headers: this.headers})
-      .subscribe(items => {
-        this.items$.next(items);
-      });
+  getItems(): Observable<Item[]>{
+    return this.httpClient.get<Item[]>(`${this.url}`, { headers: this.headers});
+  }
+  deleteItem(){
+    return this.httpClient.delete(`${this.url}`, { headers: this.headers});
+  }
+  createItem(){
+    return this.httpClient.post(`${this.url}`, { headers: this.headers});
   }
 
-  getItems(): Subject<Item[]> {
-    this.refreshItems();
-    return this.items$;
-  }
 }

@@ -10,54 +10,53 @@ import {UserService} from "../User/user.service";
 @Component({
   selector: 'app-items-menu',
   template: `
-      <div class="container" style="width: 900px; margin-top: 20px;">
+    <div class="container" style="width: 900px; margin-top: 20px;">
 
-          <h2 class="text-center m-5">Menù</h2>
+      <h2 class="text-center m-5">Menù</h2>
 
-          <table class="table table-striped table-bordered">
-              <thead>
-              <tr>
-                  <th>Name</th>
-                  <th>Type</th>
-                  <th>Price</th>
-                  <th>Action</th>
-              </tr>
-              </thead>
+      <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Price</th>
+          <th>Action</th>
+        </tr>
+        </thead>
 
-              <tbody>
+        <tbody>
 
-              <tr *ngFor="let item of items$ | async; index as i">
+        <tr *ngFor="let item of items; index as i">
 
-                <td>{{item.name}}</td>
-                  <td>{{item.type}}</td>
-                  <td>{{item.price}}</td>
-                  <td>
-                      <button type="button" class="btn btn-info" (click)="increaseQuantity(item.name,item.type, item.price, i)"><span class="bi bi-plus" ></span></button>&nbsp;
-                      <button class="btn btn-light">{{this.quantities[i]}}
-                      </button>&nbsp;
+          <td>{{item.name}}</td>
+          <td>{{item.type}}</td>
+          <td>{{item.price}}</td>
+          <td>
+            <button type="button" class="btn btn-info" (click)="decreaseQuantity(item.name, i)"><span
+              class="bi bi-dash"></span></button>&nbsp;
+            <button class="btn btn-light">{{this.quantities[i]}}
+            </button>&nbsp;
+            <button type="button" class="btn btn-info" (click)="increaseQuantity(item.name,item.type, item.price, i)">
+              <span class="bi bi-plus"></span></button>
+          </td>
+        </tr>
+        <br>
+        <div class="container">
+          <div class="row">
+            <div class="row text-center">
+              <button class="btn btn-primary" (click)="completeOrder()">Complete Order</button>
+            </div>
+          </div>
+        </div>
 
-                      <button type="button" class="btn btn-info" (click)="decreaseQuantity(item.name, i)"><span class="bi bi-dash"></span></button>
 
-
-                  </td>
-              </tr>
-              <br>
-              <div class="container">
-                  <div class="row">
-                      <div class="row text-center">
-                          <button class="btn btn-primary" (click)="completeOrder()">Complete Order</button>
-                      </div>
-                  </div>
-              </div>
-
-
-              </tbody>
-          </table>
-      </div>
+        </tbody>
+      </table>
+    </div>
   `
 })
 export class ItemsMenuComponent implements OnInit {
-  items$: Observable<Item[]> = new Observable();
+  items: Item[] = [];
 
   queue_items: any = [];
 
@@ -76,16 +75,22 @@ export class ItemsMenuComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.table_number = params.get('number');
     });
-    this.items$.subscribe(items=>{
-      items.forEach(item=>{
-        this.quantities.push(0);
-      });
-    });
-
   }
 
-  private fetchItems(): void {
-    this.items$ = this.itemService.getItems();
+  private initializeQuantities(){
+    this.items.forEach((item)=>{
+        this.quantities.push(0);
+    });
+  }
+  fetchItems(): void {
+    this.itemService.getItems().subscribe({
+      next:(items)=>{
+        console.log('Items retreived');
+        this.items = items;
+        this.initializeQuantities();
+      },
+      error: (err) => console.log('Error retreiving items: '+ JSON.stringify(err))
+    });
   }
 
   increaseQuantity(name: string, type: string, price:number, i: number): void {
@@ -115,6 +120,10 @@ export class ItemsMenuComponent implements OnInit {
 
 
   completeOrder(): void{
+    if(this.queue_items.empty){
+      this.router.navigate(['/waiters']);
+      return;
+    }
     this.queueService.insertOrder(this.queue_items).subscribe({
       next: (res) => {
         console.log('Order inserted: ' + JSON.stringify(res));
