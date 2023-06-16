@@ -4,4 +4,6 @@ export interface Table {
   seats: number;
   isFree: boolean;
   bill: number;
+
+  waiter: string
 }

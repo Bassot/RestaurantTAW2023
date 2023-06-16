@@ -6,22 +6,12 @@ import {ios} from "../index";
 export const tablesRouter = express.Router();
 //tablesRouter.use(express.json());
 tablesRouter.get("/", (req, res) => {
-    if (req.query.email == undefined) {
-        table.getModel().find({}).sort({number: 1}).then((tables) => {
-            res.status(200).json(tables);
-        }).catch((err) => {
-            res.status(500).send('DB error: ' + err);
-        });
-    } else {
-        table.getModel().find({$or: [
-                {waiter: req.query.email},
-                {isFree: true}
-            ]}).sort({number: 1}).then((tables) => {
-            res.status(200).json(tables);
-        }).catch((err) => {
-            res.status(500).send('DB error: ' + err);
-        });
-    }
+    table.getModel().find({}).sort({number: 1}).then((tables) => {
+        res.status(200).json(tables);
+    }).catch((err) => {
+        res.status(500).send('DB error: ' + err);
+    });
+
 });
 tablesRouter.post("/", (req, res) => {
     if (req.body.number == undefined || req.body.seats == undefined)

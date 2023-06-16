@@ -5,6 +5,7 @@ import {TableService} from "../Table/table.service";
 import {SocketioService} from "../Socketio/socketio.service";
 import {UserService} from "../User/user.service";
 import {Router} from "@angular/router";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-waiter',
@@ -28,9 +29,9 @@ import {Router} from "@angular/router";
                   <td>{{table.seats}}</td>
                   <td *ngIf="table.isFree == false">Occupied</td>
                   <td *ngIf="table.isFree == false">
-                      <button class="btn btn-info" [routerLink]="['/menu', {'number': table.number}]">Add order</button>
+                      <button *ngIf="table.waiter==getEmail()" class="btn btn-info" [routerLink]="['/menu', {'number': table.number}]">Add order</button>
                       &nbsp;
-                      <button class="btn btn-primary" [routerLink]="['/orders', {'number': table.number}]">Orders status</button>
+                      <button *ngIf="table.waiter==getEmail()" class="btn btn-primary" [routerLink]="['/orders', {'number': table.number}]">Orders status</button>
                       &nbsp;
                   </td>
                   <td *ngIf="table.isFree == true">Free</td>
@@ -49,7 +50,8 @@ export class WaiterComponent implements OnInit {
   constructor(private tablesService: TableService,
               private socketService: SocketioService,
               private userService: UserService,
-              private router: Router) { }
+              private router: Router,
+              private toastr: ToastrService) { }
 
   ngOnInit(): void {
     if(this.userService.getRole() != 'Waiter')
@@ -58,10 +60,17 @@ export class WaiterComponent implements OnInit {
     this.socketService.connectTables().subscribe((m)=>{
       this.fetchTables();
     });
+    this.socketService.connectQueue(true).subscribe((m)=>{
+      this.toastr.success( m);
+    });
+  }
+
+  getEmail(){
+    return this.userService.getEmail();
   }
 
   private fetchTables(): void {
-    this.tablesService.getTables(this.userService.getEmail()).subscribe({
+    this.tablesService.getTables().subscribe({
       next: (tables) => {
         console.log('Tables retrieved');
         this.tables = tables as Table[];

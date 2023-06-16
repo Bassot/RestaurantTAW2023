@@ -14,9 +14,13 @@ export class SocketioService {
     this.socket = io(this.userService.getUrl())
   }
 
-  connectQueue(): Observable<any> {
+  connectQueue(ofWaiter?: boolean): Observable<any> {
+    let topic = 'queue';
+    if(ofWaiter){
+      topic = 'queue'+this.userService.getEmail();
+    }
     return new Observable<any>((observer) => {
-      this.socket.on('queue', (m: any) => {
+      this.socket.on(topic, (m: any) => {
         console.log('QUEUE TOPIC: message received');
         observer.next(m);
       });

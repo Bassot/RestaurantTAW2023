@@ -20,6 +20,10 @@ import {ordersStatusComponent} from "./orders-status/orders-status.component";
 import { UsersListComponent } from './users-list/users-list.component';
 import { TablesListComponent } from './tables-list/tables-list.component';
 import { ItemsListComponent } from './items-list/items-list.component';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,13 +41,16 @@ import { ItemsListComponent } from './items-list/items-list.component';
     TablesListComponent,
     ItemsListComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+  ],
   providers: [
     UserService,
     TableService,

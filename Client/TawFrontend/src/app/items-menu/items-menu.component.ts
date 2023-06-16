@@ -102,6 +102,7 @@ export class ItemsMenuComponent implements OnInit {
         timestamp: undefined, // will be populated on server side
         status: 'Pending',
         table: this.table_number,
+        waiter: this.userService.getEmail()
       };
       this.queue_items.push(item);
       console.log('Item added: ' + JSON.stringify(item));

@@ -6,7 +6,9 @@ export interface Queue_Item extends mongoose.Document {
     price: number,
     timestamp: Date,    //to order te queue
     status: "Pending" | "Preparing" | "Ready",
-    table: number
+    table: number,
+
+    waiter: string
 
 }
 
@@ -34,6 +36,11 @@ var QueueItemSchema = new mongoose.Schema<Queue_Item>( {
     },
     table: {
         type: mongoose.SchemaTypes.Number,
+        required: true
+    },
+
+    waiter: {
+        type: mongoose.SchemaTypes.String,
         required: true
     }
 });

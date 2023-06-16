@@ -19,10 +19,7 @@ export class TableService {
     });
   }
 
-  getTables(waiter?: string): Observable<Table[]>{
-    if(waiter!=undefined){
-      return this.httpClient.get<Table[]>(`${this.url}`, { headers: this.headers, params: new HttpParams().set('email', waiter)});
-    }
+  getTables(): Observable<Table[]>{
     return this.httpClient.get<Table[]>(`${this.url}`, { headers: this.headers});
   }
   createTable(number: number, seats: number){

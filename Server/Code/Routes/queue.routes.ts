@@ -73,7 +73,11 @@ queueRouter.put('/update', (req, res) => {
     const update = {status: req.body.status};
     queue_item.getModel().findOneAndUpdate(filter, update, {new: true}).then((item) => {
         console.log('Item updated');
+
         notify('');
+        if(item?.status=="Ready"){
+            notifyWaiter(item.waiter,"The "+item.type+" "+item.name+" is ready to be served at table "+item.table);
+        }
         return res.status(200).json(item);
     }).catch((err) => {
         console.log(('Error updating item: ' + err).red);
@@ -82,4 +86,7 @@ queueRouter.put('/update', (req, res) => {
 });
 function notify(m: string) {
     ios.emit('queue', m);
+}
+function notifyWaiter(waiter: string, m: string) {
+    ios.emit('queue'+waiter, m);
 }
