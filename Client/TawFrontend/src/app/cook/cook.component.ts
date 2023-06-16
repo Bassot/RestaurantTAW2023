@@ -38,7 +38,7 @@ export class CookComponent implements OnInit {
         console.log('Tables retrieved');
         this.tables = tables as Table[];
 
-        // retreiveng items data
+        // retreiveng ONLY DISHES data
         this.queueService.getAllDishes().subscribe({
           next: (items) => {
             console.log('Items in queue retrieved');
@@ -55,18 +55,29 @@ export class CookComponent implements OnInit {
     });
   }
 
-  getItemsRelatedToTable(tableNum: number): Queue_Item[] {
+  getDishesRelatedToTable(tableNum: number): Queue_Item[] {
     return this.itemsInQueue.filter((item) => {
       return item.table == tableNum;
     });
   }
 
+  private isEveryTableDishesReady(tableNum: number): boolean {
+    return this.getDishesRelatedToTable(tableNum).every((item)=>{
+      return item.status == 'Ready';
+    });
+  }
   //methods to the waitress related
-  updateItemStatus(itemId: string, newStatus: string) {
+  updateItemStatus(itemId: string, newStatus: string, tableNum: number) // waiter email as parameter
+  {
     console.log('Request for updating, item: ' + itemId + ', new status: ' + newStatus);
     this.queueService.updateItemStatus(itemId, newStatus).subscribe({
       next: (itemUpdated) => {
         console.log('Item status updated, received: ' + JSON.stringify(itemUpdated));
+        // if every dish is ready we sent the notification to the waiters
+        if (this.isEveryTableDishesReady(tableNum)){
+          let m = 'Dishes in table '+tableNum+' are ready!';
+          this.socketService.getSocket().emit(/* waiter email */ '', m);
+        }
       },
       error: (err) => {
         console.log('Error updating status : ' + JSON.stringify(err));

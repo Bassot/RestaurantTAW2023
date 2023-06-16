@@ -12,17 +12,17 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let item of getItemsRelatedToTable(table.number)">
+    <tr *ngFor="let item of getDishesRelatedToTable(table.number)">
       <td></td>
       <td>{{item.name}}</td>
       <td>{{item.timestamp | date:'short'}}</td>
       <td *ngIf="item.status != 'Ready'">
         <button class="btn btn-primary" *ngIf="item.status == 'Pending'"
-                (click)="updateItemStatus(item._id, 'Preparing')"
+                (click)="updateItemStatus(item._id, 'Preparing', item.table)"
                 style="margin-right: 10px">Start</button>
         <button class="btn btn-success"
                 *ngIf="item.status == 'Preparing'"
-                (click)="updateItemStatus(item._id, 'Ready')">Ready</button>
+                (click)="updateItemStatus(item._id, 'Ready', item.table)">Ready</button>
       </td>
       <td *ngIf="item.status == 'Ready'">no actions</td>
       <td>{{item.status}}</td>

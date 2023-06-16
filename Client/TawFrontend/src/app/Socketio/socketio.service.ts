@@ -48,4 +48,26 @@ export class SocketioService {
       };
     });
   }
+
+  connectNotifications(emailWaiter: string){
+    return new Observable<any>((observer) => {
+      this.socket.on(emailWaiter, (m: any) => {
+        console.log(emailWaiter+' TOPIC: message received');
+        observer.next(m);
+      });
+      this.socket.on('error', (err: any) => {
+        console.log('Socket.io error: ' + err);
+        observer.error(err);
+      });
+      return {
+        unsubscribe: () => {
+          this.socket.disconnect();
+        }
+      };
+    });
+  }
+
+  getSocket(){
+    return this.socket;
+  }
 }
