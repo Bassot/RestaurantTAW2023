@@ -219,7 +219,7 @@ export class CashierComponent implements OnInit {
           console.log('Items related to table ' + tableNum + ' deleted');
 
           //free the table
-          this.tablesService.freeTable(tableNum, '').subscribe({
+          this.tablesService.freeTable(tableNum).subscribe({
             next: (res) => console.log('Table ' + tableNum + ' now is free'),
             error: (err) => console.log('Error changing the table ' + tableNum + ' to free ')
           })
