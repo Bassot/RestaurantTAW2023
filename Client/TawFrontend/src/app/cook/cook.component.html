@@ -24,7 +24,7 @@
                 *ngIf="item.status == 'Preparing'"
                 (click)="updateItemStatus(item._id, 'Ready')">Ready</button>
       </td>
-      <td *ngIf="item.status == 'Ready'">Item is ready</td>
+      <td *ngIf="item.status == 'Ready'">no actions</td>
       <td>{{item.status}}</td>
     </tr>
     </tbody>
