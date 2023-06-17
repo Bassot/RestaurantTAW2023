@@ -13,6 +13,8 @@ export class TablesListComponent implements OnInit {
   tables: Table[] = [];
   showOptions: boolean = false;
 
+  newTableNum :any;
+
   constructor(private tableService: TableService, private socketIo: SocketioService) {
   }
 
@@ -32,6 +34,16 @@ export class TablesListComponent implements OnInit {
       error: (err) => console.log('Error retreiving tables : ' + JSON.stringify(err))
     })
   }
+
+  setNewTableNum(number: number){
+    this.newTableNum=number+1;
+  }
+
+  getNewTableNum(number: number){
+    return this.newTableNum.toString();
+  }
+
+
 
   deleteTable(tableNum: number, isFree: boolean) {
     if(confirm('Do you really want to delete table '+tableNum+' ?')) {

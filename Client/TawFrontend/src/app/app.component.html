@@ -5,7 +5,6 @@
       <button *ngIf="this.userService.isLoggedIn()==true" class="btn btn-light" type="submit" (click)="navToHome()">Home</button>
       <button *ngIf="this.userService.isLoggedIn()==true" button class="btn btn-light" type="submit" (click)="logout()">Logout</button>
       <button *ngIf="this.userService.isLoggedIn()==false" class="btn btn-light" type="submit" (click)="navToLogin()">Login</button>
-      <button *ngIf="this.userService.isLoggedIn()==false" class="btn btn-light" type="submit" (click)="navToSignup()">Signup</button>
     </div>
   </nav>
 </div>

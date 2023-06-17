@@ -11,9 +11,11 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let table of tables">
+    <tr *ngFor="let table of tables;let last = last">
       <td>{{table.number}}</td>
-      <td>{{table.seats}}</td>
+      <td>{{table.seats}}
+        <p *ngIf="last==true">{{setNewTableNum(table.number)}}</p>
+      </td>
       <td *ngIf="table.isFree">Free</td>
       <td *ngIf="!table.isFree">Occupied</td>
       <td *ngIf="table.isFree">
@@ -21,6 +23,7 @@
       </td>
       <td *ngIf="!table.isFree">free the table to delete it</td>
     </tr>
+
     </tbody>
   </table>
   <div style="margin-top: 50px; margin-bottom: 30px">
@@ -30,14 +33,10 @@
     </div>
     <div *ngIf="showOptions" style="margin-top: 30px; margin-bottom: 30px; width: 250px;">
       <div class="form-floating mb-3">
-        <input class="form-control" type="text" #number id="number" placeholder="number" required>
-        <label for="number">Number (it must be unique!)</label>
-      </div>
-      <div class="form-floating mb-3">
         <input class="form-control" type="text" #seats id="seats" placeholder="number" required>
         <label for="seats">Seats</label>
       </div>
-      <button class="btn btn-primary" (click)="createTable(number.value, seats.value)">Add Table</button>
+      <button class="btn btn-primary" (click)="createTable(this.newTableNum, seats.value)">Add Table</button>
     </div>
   </div>
 </div>
