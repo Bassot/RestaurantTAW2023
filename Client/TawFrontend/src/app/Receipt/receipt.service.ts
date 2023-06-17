@@ -37,19 +37,23 @@ export class ReceiptService {
     const params = {
       tableNum: tableNum,
       items: items,
-      total: total
+      total: total,
+      waiter: items[0].waiter,
+      timestamp: undefined
     };
     return this.httpClient.post<Blob>(this.url + '/receiptPDF', params, {
       headers: this.headers,
       responseType: 'blob' as 'json'
     });
   }
-  emitProfit(day1: Date, day2: Date, receipts: Receipt[], total: number): Observable<Blob>{
+  emitProfit(day1: Date, day2: Date, receipts: Receipt[], statistics: any): Observable<Blob>{
     const params = {
       start: day1,
       end: day2,
       receipts: receipts,
-      total: total
+      total: statistics.total,
+      itStatistics: statistics.itStatistics,
+      waitStatistics: statistics.waitStatistics
     };
     return this.httpClient.post<Blob>(this.url + '/profitPDF', params, {
       headers: this.headers,

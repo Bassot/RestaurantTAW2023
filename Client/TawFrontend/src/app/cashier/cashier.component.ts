@@ -25,8 +25,7 @@ export class CashierComponent implements OnInit {
               private socketService: SocketioService,
               private receiptService: ReceiptService,
               private userService: UserService,
-              private router: Router) {
-  }
+              private router: Router) {}
 
   ngOnInit(): void {
     if (this.userService.getRole() != 'Cashier')
@@ -57,7 +56,6 @@ export class CashierComponent implements OnInit {
       }
     });
   }
-
   private refreshQueue() {
     this.queueService.getAllQueue().subscribe({
       next: (items) => {
@@ -77,7 +75,7 @@ export class CashierComponent implements OnInit {
   private getItemsRelatedToTable(tableNum: number): Queue_Item[] {
     return this.itemsInQueue.filter((item) => {
       return item.table == tableNum;
-    })
+    });
   }
 
   private calculateTableTotalPrice() {
@@ -89,12 +87,36 @@ export class CashierComponent implements OnInit {
     });
   }
 
-  private calculateProfitTotalPrice(receipts: Receipt[]): number {
+  private getStatisticsByReceipts(receipts: Receipt[]) {
+    let itStat: any[] = [];
+    let waitStat: any[] = [];
     let s = 0.0;
-    receipts.forEach((rec) => {
+    receipts.forEach((rec)=>{
+      rec.items.forEach((item)=>{
+
+        let i = itStat.findIndex((it) => it.name == item.name);
+        if(i < 0){
+          itStat.push({name: item.name, num: 1});
+        } else{
+          (itStat[i].num)++;
+        }
+
+        let w = waitStat.findIndex((it) => it.email == item.waiter)
+        if(w < 0){
+          waitStat.push({email: item.waiter, num: 1});
+        } else{
+          (waitStat[w].num)++;
+        }
+      });
       s += rec.total;
-    })
-    return s;
+    });
+    itStat.sort((a, b) => b.num - a.num);
+    waitStat.sort((a, b) => b.num - a.num);
+    return {
+      itStatistics: itStat,
+      waitStatistics: waitStat,
+      total: s
+    };
   }
 
   // single receipt methods
@@ -116,11 +138,12 @@ export class CashierComponent implements OnInit {
     });
   }
 
-  private uploadReceipt(tableNum: number, tableBill: number) {
+  private uploadReceipt(tableNum: number, tableBill: number, waiter: string) {
     let receipt: any = {
       table: tableNum,
       items: this.getItemsRelatedToTable(tableNum),
       total: tableBill,
+      waiter: waiter,
       timestamp: undefined
     }
     this.receiptService.addReceipt(receipt).subscribe({
@@ -134,8 +157,8 @@ export class CashierComponent implements OnInit {
   }
 
   // methods to calculate profit
-  private makeProfitPdf(day1: Date, day2: Date, receipts: Receipt[], total: number) {
-    this.receiptService.emitProfit(day1, day2, receipts, total).subscribe({
+  private makeProfitPdf(day1: Date, day2: Date, receipts: Receipt[], statistics: any) {
+    this.receiptService.emitProfit(day1, day2, receipts, statistics).subscribe({
       next: (data) => {
         let file = new Blob([data], {type: 'application/pdf'})
         let fileURL = URL.createObjectURL(file);
@@ -154,7 +177,7 @@ export class CashierComponent implements OnInit {
     this.receiptService.getProfit(day1, day2).subscribe({
       next: (receipts) => {
         console.log('Receipts retrieved from DB');
-        this.makeProfitPdf(day1, day2, receipts, this.calculateProfitTotalPrice(receipts));
+        this.makeProfitPdf(day1, day2, receipts, this.getStatisticsByReceipts(receipts));
       },
       error: (err) => {
         console.log('Error retrieving receipts from DB: ' + JSON.stringify(err));
@@ -174,7 +197,7 @@ export class CashierComponent implements OnInit {
     this.receiptService.getProfit(day1, day2).subscribe({
       next: (receipts) => {
         console.log('Receipts retrieved from DB');
-        this.makeProfitPdf(day1, day2, receipts, this.calculateProfitTotalPrice(receipts));
+        this.makeProfitPdf(day1, day2, receipts, this.getStatisticsByReceipts(receipts));
       },
       error: (err) => {
         console.log('Error retrieving receipts from DB: ' + JSON.stringify(err));
@@ -189,7 +212,7 @@ export class CashierComponent implements OnInit {
     this.receiptService.getProfit(day1, day2).subscribe({
       next: (receipts) => {
         console.log('Receipts retrieved from DB');
-        this.makeProfitPdf(day1, day2, receipts, this.calculateProfitTotalPrice(receipts));
+        this.makeProfitPdf(day1, day2, receipts, this.getStatisticsByReceipts(receipts));
       },
       error: (err) => {
         console.log('Error retrieving receipts from DB: ' + JSON.stringify(err));
@@ -204,7 +227,7 @@ export class CashierComponent implements OnInit {
     });
   }
 
-  freeTableAndItems(tableNum: number, tableBill: number) {
+  freeTableAndItems(tableNum: number, tableBill: number, waiter: string) {
     if (confirm("Are you sure to free table " + tableNum + ", its related items and to store the receipt?")) {
       if (!this.isEveryTableItemReady(tableNum)) {
         alert('There are still some items not ready in the table ' + tableNum + ", you can' t free the table. Ping the cooks or the bartenders");
@@ -212,7 +235,8 @@ export class CashierComponent implements OnInit {
       }
 
       // first we upload the receipt to DB
-      this.uploadReceipt(tableNum, tableBill);
+      this.uploadReceipt(tableNum, tableBill, waiter);
+
       // deleting items from queue
       this.queueService.deleteTableOrder(tableNum).subscribe({
         next: (res) => {
@@ -221,8 +245,9 @@ export class CashierComponent implements OnInit {
           //free the table
           this.tablesService.freeTable(tableNum).subscribe({
             next: (res) => console.log('Table ' + tableNum + ' now is free'),
-            error: (err) => console.log('Error changing the table ' + tableNum + ' to free ')
-          })
+            error: (err) => console.log('Error setting the table ' + tableNum + ' to free ')
+          });
+
         },
         error: (err) => console.log('Error deleting the item related to table ' + tableNum)
       });

@@ -4,5 +4,6 @@ export interface Receipt{
   table: number,
   items: Queue_Item[],
   total: number,
+  waiter: string,
   timestamp: Date
 }

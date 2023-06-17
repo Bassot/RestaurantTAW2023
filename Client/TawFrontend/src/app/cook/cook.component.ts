@@ -66,18 +66,12 @@ export class CookComponent implements OnInit {
       return item.status == 'Ready';
     });
   }
-  //methods to the waitress related
   updateItemStatus(itemId: string, newStatus: string, tableNum: number) // waiter email as parameter
   {
     console.log('Request for updating, item: ' + itemId + ', new status: ' + newStatus);
     this.queueService.updateItemStatus(itemId, newStatus).subscribe({
       next: (itemUpdated) => {
         console.log('Item status updated, received: ' + JSON.stringify(itemUpdated));
-        // if every dish is ready we sent the notification to the waiters
-        if (this.isEveryTableDishesReady(tableNum)){
-          let m = 'Dishes in table '+tableNum+' are ready!';
-          this.socketService.getSocket().emit(/* waiter email */ '', m);
-        }
       },
       error: (err) => {
         console.log('Error updating status : ' + JSON.stringify(err));

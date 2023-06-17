@@ -23,7 +23,7 @@ export function makeReceiptPDF(tableNum, date, items: Queue_Item[], total){
     return doc;
 }
 
-export function makeProfitPDF(day1, day2, recs: Receipt[], date, total){
+export function makeProfitPDF(day1, day2, recs: Receipt[], date, total, itStat, waitStat){
     const doc = new PDFDocument({font: 'Courier'});
     doc.fontSize(20).text('RECEIPTS FROM:', {align: 'center'});
     doc.fontSize(20).text(' ' + day1, {align: 'center'});
@@ -45,7 +45,26 @@ export function makeProfitPDF(day1, day2, recs: Receipt[], date, total){
     doc.fontSize(15).text('TOTAL:');
     doc.moveUp();
     doc.text('€ ' + total + '  ', { align: 'right' });
-    doc.fontSize(12).text('Date: ' + date);
+
+    doc.fontSize(20).text('--------------------------------------', { align: 'justify'});
+    doc.fontSize(20).text('--------------------------------------', { align: 'justify'});
+
+    doc.fontSize(12);
+    doc.text('ITEMS STATISTICS (number of sales): ');
+    itStat.forEach((it)=>{
+        doc.text(it.name +  ' :');
+        doc.moveUp();
+        doc.text(+it.num, { align: 'right' });
+    });
+    doc.moveDown();
+    doc.text('WAITER STATISTICS (number of items served): ');
+    waitStat.forEach((waitr)=>{
+        doc.text(waitr.email + ' :');
+        doc.moveUp();
+        doc.text(waitr.num, { align: 'right' });
+    });
+    doc.moveDown();
+    doc.text('Date: ' + date);
     doc.end();
     return doc;
 }

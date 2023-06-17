@@ -33,5 +33,11 @@ receiptRouter.post('/receiptPDF', (req, res) => {
 });
 receiptRouter.post('/profitPDF', (req, res) => {
     console.log('Creating receipt PDF for table: ' + req.body.tableNum);
-    makeProfitPDF(req.body.start, req.body.end, req.body.receipts, new Date(), req.body.total).pipe(res);
+    makeProfitPDF(req.body.start,
+        req.body.end,
+        req.body.receipts,
+        new Date(),
+        req.body.total,
+        req.body.itStatistics,
+        req.body.waitStatistics).pipe(res);
 });

@@ -42,7 +42,7 @@ exports.queueRouter.post('/', (req, res) => {
         item.timestamp = new Date();
     });
     queue_item.getModel().insertMany(receivedItems).then((item) => {
-        notify();
+        notify('');
         return res.status(200).json({ error: false, errormessage: "", id: 0 });
     }).catch((err) => {
         return res.status(404).json({ error: true, errormessage: "Mongo error: " + err });
@@ -75,7 +75,7 @@ exports.queueRouter.get('/table/:tableid', (req, res) => {
 exports.queueRouter.delete('/table/:tableid', (req, res) => {
     queue_item.getModel().deleteMany({ table: req.params.tableid }).then((items) => {
         if (items.deletedCount > 0) {
-            notify();
+            notify('');
             return res.status(200).json({ error: false, errormessage: "" });
         }
         else
@@ -94,14 +94,19 @@ exports.queueRouter.put('/update', (req, res) => {
     const update = { status: req.body.status };
     queue_item.getModel().findOneAndUpdate(filter, update, { new: true }).then((item) => {
         console.log('Item updated');
-        notify();
+        notify('');
+        if ((item === null || item === void 0 ? void 0 : item.status) == "Ready") {
+            notifyWaiter(item.waiter, "The " + item.type + " " + item.name + " is ready to be served at table " + item.table);
+        }
         return res.status(200).json(item);
     }).catch((err) => {
         console.log(('Error updating item: ' + err).red);
         return res.status(404).json({ error: true, errormessage: "Invalid id item" });
     });
 });
-function notify() {
-    let m = 'Hello';
+function notify(m) {
     index_1.ios.emit('queue', m);
+}
+function notifyWaiter(waiter, m) {
+    index_1.ios.emit('queue' + waiter, m);
 }

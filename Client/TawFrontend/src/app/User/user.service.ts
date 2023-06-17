@@ -95,7 +95,6 @@ export class UserService {
   public getToken(){
     return this.token;
   }
-
   getEmail(){
     return (jwt_decode(this.token) as Token).email;
   }

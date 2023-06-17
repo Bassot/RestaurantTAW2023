@@ -86,8 +86,4 @@ export class WaiterComponent implements OnInit {
       error: (err) => console.log('Error occupying table: ' + JSON.stringify(err))
     });
   }
-
-  private fetchNotifications(){
-
-  }
 }

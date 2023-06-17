@@ -5,6 +5,7 @@ export interface Receipt extends mongoose.Document {
     table: number,
     items: queueItem.Queue_Item[],
     total: number,
+    waiter: string,
     timestamp: Date
 }
 
@@ -20,6 +21,10 @@ var ReceiptSchema = new mongoose.Schema<Receipt>( {
     total: {
         type: mongoose.SchemaTypes.Number,
         required: true,
+    },
+    waiter: {
+        type: mongoose.SchemaTypes.String,
+        required: true
     },
     timestamp: {
         type: mongoose.SchemaTypes.Date,
