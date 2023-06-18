@@ -1,7 +1,7 @@
 # Restaurant TAW project 2023
 ### To run the full app with docker, simply type in the root directory:
 ``` 
-docker-compose-up
+docker-compose up
 ``` 
 
 ### To run it manually you must have mongo, node.js and Angular installed on your host.
