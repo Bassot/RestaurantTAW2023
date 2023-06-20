@@ -3,10 +3,19 @@
   background: #ffffff;
 }
 
+
+
 .container{
   color: #fff;
 }
 
+.container{
+  color: #fff;
+}
+
+.form-control{
+  color: #000000 !important;
+}
 body {
 
   background-image: url('./assets/bg.jpg');
