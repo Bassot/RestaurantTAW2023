@@ -3,6 +3,8 @@ import {TableService} from "../Table/table.service";
 import {Table} from "../Table/table";
 import {SocketioService} from "../Socketio/socketio.service";
 import {is} from "date-fns/locale";
+import {UserService} from "../User/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-tables-list',
@@ -15,10 +17,15 @@ export class TablesListComponent implements OnInit {
 
   newTableNum :any;
 
-  constructor(private tableService: TableService, private socketIo: SocketioService) {
+  constructor(private tableService: TableService,
+              private socketIo: SocketioService,
+              private userService: UserService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
+    if(this.userService.getRole() != 'Waiter')
+      this.router.navigate(['/']);
     this.getTables();
     this.socketIo.connectTables().subscribe((m)=>{
       this.getTables();
