@@ -29,14 +29,11 @@ import {ActivatedRoute, Router} from "@angular/router";
                   <td>{{item.type}}</td>
                   <td>{{item.timestamp | date:'short'}}</td>
                   <td>
-                    <div *ngIf="item.status=='Pending'">
-                    <button class="btn btn-warning">Pending</button>
+                    <div *ngIf="item.status=='Pending'">Pending
                     </div>
-                    <div *ngIf="item.status=='Ready'">
-                    <button class="btn btn-success">Ready</button>
+                    <div *ngIf="item.status=='Ready'">Ready
                     </div>
-                    <div *ngIf="item.status=='Preparing'">
-                    <button class="btn btn-info">Preparing</button>
+                    <div *ngIf="item.status=='Preparing'">Preparing
                     </div>
                   </td>
               </tr>
