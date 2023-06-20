@@ -121,6 +121,10 @@ export class CashierComponent implements OnInit {
 
   // single receipt methods
   emitReceipt(tableNum: number, tableBill: number) {
+    if(tableBill <= 0){
+      alert("There is no orders related to table "+tableNum);
+      return;
+    }
     this.makeReceiptPdf(tableNum, this.getItemsRelatedToTable(tableNum), tableBill);
   }
 
