@@ -1,4 +1,19 @@
 
+.table {
+  background: #ffffff;
+}
+
+.container{
+  color: #fff;
+}
+
+body {
+
+  background-image: url('./assets/bg.jpg');
+
+}
+
+
 .blue-color {
   color:blue;
 }
