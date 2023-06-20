@@ -24,7 +24,7 @@ export class TablesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.userService.getRole() != 'Waiter')
+    if(this.userService.getRole() != 'Cashier')
       this.router.navigate(['/']);
     this.getTables();
     this.socketIo.connectTables().subscribe((m)=>{
