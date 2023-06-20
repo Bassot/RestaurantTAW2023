@@ -139,14 +139,7 @@ export class CashierComponent implements OnInit {
   }
 
   private uploadReceipt(tableNum: number, tableBill: number, waiter: string) {
-    let receipt: any = {
-      table: tableNum,
-      items: this.getItemsRelatedToTable(tableNum),
-      total: tableBill,
-      waiter: waiter,
-      timestamp: undefined
-    }
-    this.receiptService.addReceipt(receipt).subscribe({
+    this.receiptService.addReceipt(tableNum, this.getItemsRelatedToTable(tableNum), tableBill, waiter).subscribe({
       next: (res) => {
         console.log('Receipt uploaded: ' + JSON.stringify(res));
       },
@@ -233,10 +226,17 @@ export class CashierComponent implements OnInit {
         alert('There are still some items not ready in the table ' + tableNum + ", you can' t free the table. Ping the cooks or the bartenders");
         return;
       }
+      if(tableBill <= 0){
+        //just free the table
+        this.tablesService.freeTable(tableNum).subscribe({
+          next: (res) => console.log('Table ' + tableNum + ' now is free'),
+          error: (err) => console.log('Error setting the table ' + tableNum + ' to free ')
+        });
+        return;
+      }
 
       // first we upload the receipt to DB
       this.uploadReceipt(tableNum, tableBill, waiter);
-
       // deleting items from queue
       this.queueService.deleteTableOrder(tableNum).subscribe({
         next: (res) => {

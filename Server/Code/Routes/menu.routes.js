@@ -32,31 +32,26 @@ exports.menuRouter.get("/", (req, res) => {
     item.getModel().find({}).then((items) => {
         return res.status(200).json(items);
     }).catch((err) => {
-        res.status(500).send('DB error: ' + err);
+        return res.status(404).json({ error: 'DB error: ' + err });
     });
 });
 exports.menuRouter.delete("/:name", (req, res) => {
     let name = req.params.name;
     if (name == undefined)
-        return res.status(500).json({ error: true, errormessage: 'Given params are not correct' });
+        return res.status(400).json({ error: 'Given params are not correct' });
     item.getModel().deleteOne({ name: name }).then((items) => {
         return res.status(200).json(items);
     }).catch((err) => {
-        return res.status(500).send('DB error: ' + err);
+        return res.status(404).json({ error: 'User not found: ' + err });
     });
 });
 exports.menuRouter.post("/", (req, res) => {
     if (req.body.name == undefined || req.body.price == undefined || (req.body.type != 'Dish' && req.body.type != 'Drink')) {
-        return res.status(500).json({ error: true, errormessage: 'Given params are not correct' });
+        return res.status(400).json({ error: 'Given params are not correct' });
     }
-    const i = {
-        name: req.body.name,
-        type: req.body.type,
-        price: req.body.price
-    };
-    item.newItem(i).save().then((item) => {
+    item.newItem(req.body).save().then((item) => {
         return res.status(200).json(item);
     }).catch((err) => {
-        return res.status(500).send('DB error: ' + err);
+        return res.status(404).json({ error: 'Mongo error: ' + err });
     });
 });

@@ -27,12 +27,12 @@ export class ItemService {
     return this.httpClient.delete(`${this.url}/${name}`, { headers: this.headers});
   }
   createItem(name: string, type: string, price: number){
-    const params = {
+    const newItem = {
       name: name,
       type: type,
       price: price
     };
-    return this.httpClient.post(`${this.url}`, params,{ headers: this.headers});
+    return this.httpClient.post(`${this.url}`, newItem,{ headers: this.headers});
   }
 
 }

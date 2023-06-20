@@ -12,6 +12,7 @@ import {AppComponent} from "../app.component";
 })
 export class UserLoginComponent implements OnInit {
   isLoggedIn: boolean = false;
+
   constructor(private router: Router, private userService: UserService, private home: AppComponent) {
   }
 
@@ -28,14 +29,14 @@ export class UserLoginComponent implements OnInit {
     this.userService.signIn(curUser, remember).subscribe({
       next: (res) => {
         console.log('You are logged in, response: ' + JSON.stringify(res));
-        alert(localStorage.getItem('auth_jwt'));
+        //alert(localStorage.getItem('auth_jwt'));
 
         this.home.navToHome();
       },
       error: (err) => {
-        if(err.status==401){
+        if (err.status == 401 || err.status == 404)
           alert("Invalid user credentials!");
-        }
+        console.log('Login error ' + JSON.stringify(err));
       }
     });
   }

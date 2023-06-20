@@ -21,7 +21,14 @@ export class ReceiptService {
     });
   }
 
-  addReceipt(receipt: Receipt){
+  addReceipt(tableNum: number, items: Queue_Item[], tableBill: number, waiter: string){
+    const receipt: any = {
+      table: tableNum,
+      items: items,
+      total: tableBill,
+      waiter: waiter,
+      timestamp: undefined
+    }
     return this.httpClient.post(this.url, receipt, { headers: this.headers });
   }
 

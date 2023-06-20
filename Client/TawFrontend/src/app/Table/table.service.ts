@@ -23,11 +23,13 @@ export class TableService {
     return this.httpClient.get<Table[]>(`${this.url}`, { headers: this.headers});
   }
   createTable(number: number, seats: number){
-    const params = {
+    const newTable = {
       number: number,
-      seats: seats
+      seats: seats,
+      isFree: true,
+      bill: 0
     }
-    return this.httpClient.post(this.url, params, { headers: this.headers});
+    return this.httpClient.post(this.url, newTable, { headers: this.headers});
   }
   deleteTable(number: number){
     return this.httpClient.delete(this.url+'/'+number,{ headers: this.headers});

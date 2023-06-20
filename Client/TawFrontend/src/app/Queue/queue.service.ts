@@ -59,7 +59,7 @@ export class QueueService {
   }
 
   updateItemStatus(itemId: string, newStatus: string) {
-    return this.httpClient.put(this.url + '/update', {
+    return this.httpClient.put(this.url + '/', {
         id: itemId,
         status: newStatus
       }, {

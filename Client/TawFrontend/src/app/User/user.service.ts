@@ -76,11 +76,17 @@ export class UserService {
   }
 
   getUsers(): Observable<User[]>{
-    console.log('TOKEN: '+ this.token)
+    //console.log('TOKEN: '+ this.token)
     return this.http.get<User[]>(`${this.url}/users`, { headers: this.headers });
   }
 
-  createUser(user: User){
+  createUser(email: string, password: string, username: string, role: string){
+    const user: User = {
+      email: email,
+      password: password,
+      username: username,
+      role: role
+    };
     return this.http.post(`${this.url}/users`, user, {headers: this.headers});
   }
   deleteUser(email: string): Observable<any> {

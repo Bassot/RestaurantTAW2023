@@ -6,6 +6,8 @@ const express = require('express');
 export const receiptRouter = express.Router();
 
 receiptRouter.post('/', (req, res) => {
+    if(req.body.table == undefined || req.body.waiter == undefined)
+        return res.status(400).json({error: "Given Params are not correct"});
     let r = req.body;
     r.timestamp = new Date();
     receipt.newReceipt(r).save().then((receipt) => {
@@ -16,14 +18,16 @@ receiptRouter.post('/', (req, res) => {
 });
 
 receiptRouter.post('/profit', (req, res) => {
+    if(req.body.start == undefined || req.body.end == undefined)
+        return res.status(400).json({error: "Given Params are not correct"});
     let start = req.body.start;
     let end = req.body.end;
     receipt.getModel().find({
         timestamp: {$gte: start, $lte: end}
     }).then((receipts) => {
-        res.status(200).json(receipts);
+        return res.status(200).json(receipts);
     }).catch((err) => {
-        res.status(500).json({error: true, errormessage: "DB error: " + err});
+        return res.status(500).json({error: "DB error: " + err});
     });
 });
 

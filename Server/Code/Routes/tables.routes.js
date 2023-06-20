@@ -31,37 +31,33 @@ exports.tablesRouter = express.Router();
 //tablesRouter.use(express.json());
 exports.tablesRouter.get("/", (req, res) => {
     table.getModel().find({}).sort({ number: 1 }).then((tables) => {
-        res.status(200).json(tables);
+        return res.status(200).json(tables);
     }).catch((err) => {
-        res.status(500).send('DB error: ' + err);
+        return res.status(404).json({ error: 'Error getting tables: ' + err });
     });
 });
 exports.tablesRouter.post("/", (req, res) => {
-    if (req.body.number == undefined || req.body.seats == undefined)
-        return res.status(500).json({ error: true, errormessage: "Given Params are not correct" });
-    let t = {
-        number: req.body.number,
-        seats: req.body.seats,
-        isFree: true,
-        bill: 0
-    };
-    table.newTable(t).save().then((table) => {
+    if (req.body.number == undefined || req.body.seats == undefined || !req.body.isFree || req.body.bill != 0)
+        return res.status(400).json({ error: "Given Params are not correct" });
+    table.newTable(req.body).save().then((table) => {
         notify();
-        return res.status(200).json({ error: false, errormessage: "", id: table._id });
+        return res.status(200).json({ error: "", id: table._id });
     }).catch((err) => {
-        return res.status(500).json({ error: true, errormessage: "DB error: " + err });
+        return res.status(400).json({ error: "Given Params are not correct" });
     });
 });
 exports.tablesRouter.delete('/:tableid', (req, res) => {
+    if (req.params.tableid == undefined)
+        return res.status(404).json({ error: "Invalid table id" });
     table.getModel().deleteOne({ number: req.params.tableid }).then((table) => {
         if (table.deletedCount > 0) {
             notify();
-            return res.status(200).json({ error: false, errormessage: "" });
+            return res.status(200).json({ message: 'User deleted' });
         }
         else
-            return res.status(404).json({ error: true, errormessage: "Invalid table id" });
+            return res.status(404).json({ error: "Invalid table id" });
     }).catch((err) => {
-        return res.status(404).json({ error: true, errormessage: "Mongo error: " + err });
+        return res.status(404).json({ error: "Mongo error: " + err });
     });
     console.log('DELETE request for items related to table: ' + req.params.tableid);
 });
@@ -82,9 +78,9 @@ exports.tablesRouter.put("/:number", (req, res) => {
         };
     table.getModel().findOneAndUpdate(filter, update, { new: true }).then((table) => {
         notify();
-        return res.status(200).send("Ok, table occupied: " + table);
+        return res.status(200).json({ message: "Ok, table " + table + " status updated" });
     }).catch((err) => {
-        return res.status(500).send('DB error: ' + err);
+        return res.status(404).json({ error: "Table not found: " + err });
     });
 });
 function notify() {

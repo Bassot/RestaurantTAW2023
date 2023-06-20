@@ -19,13 +19,7 @@ export class UserSignupComponent {
       alert('Params are not correct');
       return;
     }
-    const user: User = {
-      email: email,
-      password: password,
-      username: username,
-      role: role
-    };
-    return this.userService.createUser(user).subscribe({
+    this.userService.createUser(email, password, username, role).subscribe({
       next: (res) => {
         console.log('User signed up, res: ' + JSON.stringify(res));
         this.router.navigate(['/userslist']);

@@ -63,10 +63,9 @@ app.post('/login', (req, res, next) => {
     let email = req.body.email;
     let password = req.body.password;
     console.log("New login attempt from ".green + JSON.stringify(email));
-
     user.getModel().findOne({email: email}).then((user) => {
         if (!user) {
-            return next({statusCode: 401, error: true, errormessage: "Invalid user"});
+            return res.status(404).json({error: "Invalid user"});
         }
         if (user.validatePassword(password)) {
             let tokendata = {
@@ -82,15 +81,12 @@ app.post('/login', (req, res, next) => {
                 {expiresIn: '12h'}
             );
 
-            // https://jwt.io
             return res.status(200).json({
-                error: false,
-                errormessage: "",
                 id: user._id,
                 token: token_signed
             });
         }
-        return next({statusCode: 401, error: true, errormessage: "Invalid password"});
+        return res.status(401).json({error:  "Invalid password"});
     });
 });
 
@@ -106,26 +102,24 @@ const dbHost = process.env.DBHOST || '127.0.0.1';
 mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
     let s = 'Connected to mongoDB, dbHost: ' + dbHost;
     console.log(s.bgGreen);
-    return user.getModel().findOne({email: "bass@hound.it"});
+    return user.getModel().findOne({email: "cashier@cashier.it"});
 }).then((data) => {
     if (!data) {
         console.log("Creating admin user");
         let u = user.newUser({
-            username: "bassHound",
-            email: "bass@hound.it",
+            username: "cashier",
+            email: "cashier@cashier.it",
             role: "Cashier"
         });
-        u.setPassword("hound");
-        u.setAdmin(true);
+        u.setPassword("cashier");
         u.save();
     } else {
         console.log("Admin user already exists");
     }
     return table.getModel().findOne({number: 1});
-
 }).then((data) => {
     if (!data) {
-        console.log("Creating tables");
+        console.log("Creating 4 tables with 4 seats");
         for (let i = 1; i < 5; i++) {
             let t = table.newTable({
                 number: i,
@@ -136,7 +130,7 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
             t.save();
         }
     } else {
-        console.log("Table already exist");
+        console.log("Tables already exist");
     }
     return item.getModel().findOne({name: "Pizza"});
 }).then((data) => {
@@ -181,7 +175,6 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
     } else {
         console.log("Items already exist");
     }
-
 }).then(() => {
     let server = http.createServer(app);
     ios = io(server, {
@@ -194,7 +187,7 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
         console.log('Socket.io client connected'.green);
     });
     server.listen(8080, () => console.log("HTTP Server started on port 8080".green));
-}).catch(err => console.log(err));
+}).catch((err) => console.log(err));
 
 
 

@@ -22,76 +22,38 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const user = __importStar(require("../Models/User"));
 const express = require('express');
 exports.userRouter = express.Router();
-//TODO: updating responses
 exports.userRouter.get("/", (req, res) => {
     user.getModel().find({}).then((users) => {
-        res.status(200).json(users);
+        return res.status(200).json(users);
     }).catch((err) => {
-        res.status(500).send('Error getting user: ' + err);
+        return res.status(404).json({ error: 'Error getting user: ' + err });
     });
 });
 exports.userRouter.post("/", (req, res) => {
+    if (req.body.email == undefined || req.body.password == undefined || req.body.username == undefined ||
+        (req.body.role != 'Cashier' && req.body.role != 'Waiter' && req.body.role != 'Cook' && req.body.role != 'Bartender'))
+        return res.status(400).json({ error: "Params given are not correct" });
     let u = user.newUser(req.body);
     u.setPassword(req.body.password);
-    u.setAdmin(false);
     u.save().then((data) => {
-        return res.status(200).json({ error: false, errormessage: "", id: data._id });
+        return res.status(200).json({ message: 'User created: ' + data });
     }).catch((reason) => {
         if (reason.code === 11000)
-            return res.status(403).json({ error: true, errormessage: "User already exists" });
-        return res.status(404).json({ error: true, errormessage: "DB error: " + reason.errmsg });
+            return res.status(400).json({ error: "User already exists" });
+        return res.status(404).json({ error: "DB error: " + reason });
     });
 });
-/*
-userRouter.get("/:id", async (req, res) => {
-    try {
-        const username = req?.params?.id;
-        let usertoupdate = await user.getModel().findOne({username: username});
-
-        if (usertoupdate) {
-            res.status(200).send(usertoupdate);
-        } else {
-            res.status(404).send(`Failed to find the user: ${username}`);
-        }
-
-    } catch (error) {
-        res.status(404).send(`Failed to find the user: ${req?.params?.id}`);
-    }
-});
-
- */
-exports.userRouter.put("/:email", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const email = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.email;
-    const updateduser = req.body;
-    try {
-        let users = yield user.getModel().findOneAndUpdate({ email: email }, { $set: updateduser });
-        res.status(200).send(JSON.stringify(users));
-    }
-    catch (error) {
-        res.status(500).send(error.message);
-    }
-}));
 exports.userRouter.delete("/:email", (req, res) => {
     var _a;
     const email = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.email;
     user.getModel().deleteOne({ email: email }).then((user) => {
-        res.status(200).json(user);
+        return res.status(200).json(user);
     }).catch((err) => {
-        res.status(500).json({ error: true, errormessage: "Invalid email, err: " + err });
+        return res.status(404).json({ error: "Invalid email, err: " + err });
     });
 });

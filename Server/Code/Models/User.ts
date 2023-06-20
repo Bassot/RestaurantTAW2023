@@ -6,13 +6,9 @@ export interface User extends mongoose.Document {
     username: string,
     email: string,
     role:  "Waiter" | "Cook" | "Bartender" | "Cashier";
-    admin: boolean;
     salt: string,    // salt is a random string that will be mixed with the actual password before hashing
     digest: string,  // this is the hashed password (digest of the password)
     setPassword: (pwd:string)=>void,
-    isAdmin: ()=>boolean;
-    setAdmin: (isAdmin: boolean)=>void,
-
     validatePassword: (pwd:string)=>boolean,
 }
 
@@ -29,10 +25,6 @@ var userSchema = new mongoose.Schema<User>( {
     role:  {
         type: mongoose.SchemaTypes.String,
         required: true 
-    },
-    admin:  {
-        type: mongoose.SchemaTypes.Boolean,
-        required: true
     },
     salt:  {
         type: mongoose.SchemaTypes.String,
@@ -75,17 +67,7 @@ userSchema.methods.validatePassword = function( pwd:string ):boolean {
     var digest = hmac.digest('hex');
     return (this.digest === digest);
 }
-
-userSchema.methods.isAdmin = function(): boolean {
-    return this.admin;
-}
-
-userSchema.methods.setAdmin = function(isAdmin: boolean) {
-    this.admin = isAdmin;
-}
-
 export function getSchema() { return userSchema; }
-
 
 
 // Mongoose Model

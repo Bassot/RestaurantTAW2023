@@ -43,9 +43,9 @@ exports.queueRouter.post('/', (req, res) => {
     });
     queue_item.getModel().insertMany(receivedItems).then((item) => {
         notify('');
-        return res.status(200).json({ error: false, errormessage: "", id: 0 });
+        return res.status(200).json({ message: '' });
     }).catch((err) => {
-        return res.status(404).json({ error: true, errormessage: "Mongo error: " + err });
+        return res.status(404).json({ error: "Mongo error: " + err });
     });
 });
 exports.queueRouter.get('/:type', (req, res) => {
@@ -59,34 +59,34 @@ exports.queueRouter.get('/:type', (req, res) => {
     queue_item.getModel().find(filter).sort({ timestamp: 1, table: 1 }).then((items) => {
         return res.status(200).json(items);
     }).catch((err) => {
-        return res.status(404).send('DB error: ' + err);
+        return res.status(404).json({ error: 'DB error: ' + err });
     });
 });
 // getting all the items related to a table
 exports.queueRouter.get('/table/:tableid', (req, res) => {
+    console.log('DELETE request for items related to table: ' + req.params.tableid);
     queue_item.getModel().find({ table: req.params.tableid }).then((items) => {
         return res.status(200).json(items);
     }).catch((err) => {
-        return res.status(404).send('DB error: ' + err);
+        return res.status(404).json({ error: 'DB error: ' + err });
     });
-    console.log('DELETE request for items related to table: ' + req.params.tableid);
 });
 // deleting all the items related to a table
 exports.queueRouter.delete('/table/:tableid', (req, res) => {
+    console.log('DELETE request for items related to table: ' + req.params.tableid);
     queue_item.getModel().deleteMany({ table: req.params.tableid }).then((items) => {
         if (items.deletedCount > 0) {
             notify('');
             return res.status(200).json({ error: false, errormessage: "" });
         }
         else
-            return res.status(404).json({ error: true, errormessage: "Invalid table id" });
+            return res.status(404).json({ error: "Invalid table id" });
     }).catch((err) => {
-        return res.status(404).json({ error: true, errormessage: "Mongo error: " + err });
+        return res.status(404).json({ error: "Mongo error: " + err });
     });
-    console.log('DELETE request for items related to table: ' + req.params.tableid);
 });
 // updating the order
-exports.queueRouter.put('/update', (req, res) => {
+exports.queueRouter.put('/', (req, res) => {
     console.log('Updating request for item: ' + JSON.stringify(req.body));
     if (req.body.id == undefined || req.body.status == undefined)
         return res.status(404).json({ error: true, errormessage: "Invalid params" });
