@@ -57,7 +57,7 @@ app.use(function (req: any, res) {
 });
  */
 app.get('/', function (req, res) {
-    res.status(200).json({api_version: '1.1', author: 'BassHound'});
+    res.status(200).json({api_version: '1.1', authors: 'Andrea Basso, Riccardo Nalgi'});
 });
 app.post('/login', (req, res, next) => {
     let email = req.body.email;
