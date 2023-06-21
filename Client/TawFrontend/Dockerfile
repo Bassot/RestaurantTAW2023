@@ -1,7 +1,7 @@
 #step 1
 FROM node:18-alpine as fe_node
 LABEL maintainers="Andrea Basso, Riccardo Nalgi"
-C
+RUN npm i -g @angular/cli
 
 EXPOSE 4200
 # working dir
