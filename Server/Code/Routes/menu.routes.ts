@@ -6,7 +6,7 @@ const express = require('express');
 export const menuRouter = express.Router();
 //tablesRouter.use(express.json());
 menuRouter.get("/", (req, res) => {
-    item.getModel().find({}).then((items) => {
+    item.getModel().find({}).sort({type:1}).then((items) => {
         return res.status(200).json(items);
     }).catch((err) => {
         return res.status(404).json({error:'DB error: ' + err});

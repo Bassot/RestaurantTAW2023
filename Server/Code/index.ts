@@ -116,6 +116,34 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
     } else {
         console.log("Admin user already exists");
     }
+    return user.getModel().findOne({username: "Pippo"});
+}).then((data) => {
+    if (!data) {
+        console.log("Creating sample users");
+        let w = user.newUser({
+            username: "Pippo",
+            email: "waiter@waiter.it",
+            role: "Waiter"
+        });
+        w.setPassword("123");
+        w.save();
+        let c = user.newUser({
+            username: "Pluto",
+            email: "cook@cook.it",
+            role: "Cook"
+        });
+        c.setPassword("123");
+        c.save();
+        let b = user.newUser({
+            username: "Paperino",
+            email: "bartender@bartender.it",
+            role: "Bartender"
+        });
+        b.setPassword("123");
+        b.save();
+    } else {
+        console.log("users already exists");
+    }
     return table.getModel().findOne({number: 1});
 }).then((data) => {
     if (!data) {
@@ -142,7 +170,7 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
             price: 6.0
         }).save();
         item.newItem({
-            name: "Pasta con tonno",
+            name: "Pasta",
             type: "Dish",
             price: 5.0
         }).save();
@@ -152,12 +180,12 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
             price: 1.0
         }).save();
         item.newItem({
-            name: "Panino",
+            name: "Sandwich",
             type: "Dish",
             price: 4.0
         }).save();
         item.newItem({
-            name: "Birra",
+            name: "Beer",
             type: "Drink",
             price: 4.0
         }).save();
@@ -167,7 +195,7 @@ mongoose.connect('mongodb://' + dbHost + ':27017/taw-app2023').then(() => {
             price: 2.0
         }).save();
         item.newItem({
-            name: "Gingerino",
+            name: "Fanta",
             type: "Drink",
             price: 2.0
         }).save();

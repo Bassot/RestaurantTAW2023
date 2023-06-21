@@ -35,18 +35,16 @@ export class TableService {
     return this.httpClient.delete(this.url+'/'+number,{ headers: this.headers});
   }
   occupyTable(number: any, email: string){
-    const params = new HttpParams().set('action', "occupy").set('email', email);
-    return this.httpClient.put(`${this.url}/${number}`, null, {
+    const params = new HttpParams().set('email', email);
+    return this.httpClient.put(`${this.url}/occupy/${number}`,{email:email}, {
       headers: this.headers,
       params: params,
       responseType: 'text'
     });
   }
   freeTable(number: any){
-    const params = new HttpParams().set('action', "free");
-    return this.httpClient.put(`${this.url}/${number}`, null, {
+    return this.httpClient.put(`${this.url}/free/${number}`, null, {
       headers: this.headers,
-      params: params,
       responseType: 'text',
     });
   }

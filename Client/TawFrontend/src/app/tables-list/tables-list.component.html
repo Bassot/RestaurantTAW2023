@@ -34,7 +34,7 @@
     <div *ngIf="showOptions" style="margin-top: 30px; margin-bottom: 30px; width: 250px;">
       <div class="form-floating mb-3">
         <input class="form-control" type="text" #seats id="seats" placeholder="number" required>
-        <label for="seats">Seats</label>
+        <label for="seats" style="color: #000000;">Seats</label>
       </div>
       <button class="btn btn-primary" (click)="createTable(this.newTableNum, seats.value)">Add Table</button>
     </div>

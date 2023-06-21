@@ -36,7 +36,6 @@ import {ToastrService} from "ngx-toastr";
             <button *ngIf="table.waiter==getEmail()" class="btn btn-primary"
                     [routerLink]="['/orders', {'number': table.number}]">Orders status
             </button>
-            &nbsp;
           </td>
           <td *ngIf="table.isFree == true">Free</td>
           <td *ngIf="table.isFree == true">
