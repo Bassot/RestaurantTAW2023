@@ -57,6 +57,6 @@ exports.receiptRouter.post('/receiptPDF', (req, res) => {
     (0, pdfService_1.makeReceiptPDF)(req.body.tableNum, new Date(), req.body.items, req.body.total).pipe(res);
 });
 exports.receiptRouter.post('/profitPDF', (req, res) => {
-    console.log('Creating receipt PDF for table: ' + req.body.tableNum);
+    console.log('Creating profit PDF between : ' + req.body.start + ' and ' + req.body.end);
     (0, pdfService_1.makeProfitPDF)(req.body.start, req.body.end, req.body.receipts, new Date(), req.body.total, req.body.itStatistics, req.body.waitStatistics).pipe(res);
 });

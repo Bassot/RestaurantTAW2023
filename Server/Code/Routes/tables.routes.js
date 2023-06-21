@@ -61,21 +61,29 @@ exports.tablesRouter.delete('/:tableid', (req, res) => {
     });
     console.log('DELETE request for items related to table: ' + req.params.tableid);
 });
-exports.tablesRouter.put("/:number", (req, res) => {
+exports.tablesRouter.put("/free/:number", (req, res) => {
     const filter = {
         number: req.params.number
     };
-    let update = {};
-    if (req.query.action == 'occupy')
-        update = {
-            isFree: false,
-            waiter: req.query.email
-        };
-    else if (req.query.action == 'free')
-        update = {
-            isFree: true,
-            waiter: null
-        };
+    let update = {
+        isFree: true,
+        waiter: null
+    };
+    table.getModel().findOneAndUpdate(filter, update, { new: true }).then((table) => {
+        notify();
+        return res.status(200).json({ message: "Ok, table " + table + " status updated" });
+    }).catch((err) => {
+        return res.status(404).json({ error: "Table not found: " + err });
+    });
+});
+exports.tablesRouter.put("/occupy/:number", (req, res) => {
+    const filter = {
+        number: req.params.number
+    };
+    let update = {
+        isFree: false,
+        waiter: req.body.email,
+    };
     table.getModel().findOneAndUpdate(filter, update, { new: true }).then((table) => {
         notify();
         return res.status(200).json({ message: "Ok, table " + table + " status updated" });

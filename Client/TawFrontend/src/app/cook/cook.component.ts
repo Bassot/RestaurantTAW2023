@@ -29,7 +29,10 @@ export class CookComponent implements OnInit {
     this.refreshQueue();
     this.socketService.connectQueue().subscribe((m) => {
       this.refreshQueue();
-    })
+    });
+    this.socketService.connectTables().subscribe((m) =>{
+      this.refreshQueue();
+    });
   }
 
   refreshQueue() {

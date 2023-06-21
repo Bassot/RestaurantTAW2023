@@ -16,11 +16,12 @@
       <td *ngIf="table.isFree">Free</td>
       <td *ngIf="!table.isFree">Occupied</td>
       <td>€ {{table.bill}}</td>
-      <td>
+      <td *ngIf="!table.isFree">
         <button class="btn btn-success" (click)="emitReceipt(table.number, table.bill)"
                 style="margin-right: 10px">Receipt</button>
         <button class="btn btn-primary" (click)="freeTableAndItems(table.number, table.bill, table.waiter)">Free</button>
       </td>
+      <td *ngIf="table.isFree">no actions</td>
     </tr>
     </tbody>
   </table>

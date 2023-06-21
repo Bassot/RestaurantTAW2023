@@ -22,11 +22,7 @@ export class UserLoginComponent implements OnInit {
   }
 
   login(email: string, password: string, remember: boolean) {
-    let curUser: Auth = {
-      email: email,
-      password: password
-    }
-    this.userService.signIn(curUser, remember).subscribe({
+    this.userService.signIn(email, password, remember).subscribe({
       next: (res) => {
         console.log('You are logged in, response: ' + JSON.stringify(res));
         //alert(localStorage.getItem('auth_jwt'));

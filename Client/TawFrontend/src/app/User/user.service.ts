@@ -48,7 +48,11 @@ export class UserService {
     });
   }
 
-  signIn(curUser: Auth, remember: boolean) {
+  signIn(email: string, password: string, remember: boolean) {
+    const curUser: Auth = {
+      email: email,
+      password: password
+    };
     console.log('New login request from ' + curUser.email);
     //TODO: headers
     return this.http.post(`${this.url}/login`, curUser).pipe(
