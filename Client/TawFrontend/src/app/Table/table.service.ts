@@ -35,10 +35,8 @@ export class TableService {
     return this.httpClient.delete(this.url+'/'+number,{ headers: this.headers});
   }
   occupyTable(number: any, email: string){
-    const params = new HttpParams().set('email', email);
     return this.httpClient.put(`${this.url}/occupy/${number}`,{email:email}, {
       headers: this.headers,
-      params: params,
       responseType: 'text'
     });
   }

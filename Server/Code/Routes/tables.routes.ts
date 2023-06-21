@@ -62,7 +62,7 @@ tablesRouter.put("/occupy/:number", (req, res) => {
     };
     let  update = {
         isFree: false,
-        waiter: req.body.waiter,
+        waiter: req.body.email,
     };
     table.getModel().findOneAndUpdate(filter, update, {new: true}).then((table) => {
         notify();
