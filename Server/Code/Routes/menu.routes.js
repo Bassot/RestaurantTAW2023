@@ -36,6 +36,8 @@ exports.menuRouter.get("/", (req, res) => {
     });
 });
 exports.menuRouter.delete("/:name", (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     let name = req.params.name;
     if (name == undefined)
         return res.status(400).json({ error: 'Given params are not correct' });
@@ -46,6 +48,8 @@ exports.menuRouter.delete("/:name", (req, res) => {
     });
 });
 exports.menuRouter.post("/", (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     if (req.body.name == undefined || req.body.price == undefined || (req.body.type != 'Dish' && req.body.type != 'Drink')) {
         return res.status(400).json({ error: 'Given params are not correct' });
     }

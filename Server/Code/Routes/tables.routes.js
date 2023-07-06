@@ -37,6 +37,8 @@ exports.tablesRouter.get("/", (req, res) => {
     });
 });
 exports.tablesRouter.post("/", (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     if (req.body.number == undefined || req.body.seats == undefined || !req.body.isFree || req.body.bill != 0)
         return res.status(400).json({ error: "Given Params are not correct" });
     table.newTable(req.body).save().then((table) => {
@@ -47,6 +49,8 @@ exports.tablesRouter.post("/", (req, res) => {
     });
 });
 exports.tablesRouter.delete('/:tableid', (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     if (req.params.tableid == undefined)
         return res.status(404).json({ error: "Invalid table id" });
     table.getModel().deleteOne({ number: req.params.tableid }).then((table) => {

@@ -6,6 +6,8 @@ const express = require('express');
 export const receiptRouter = express.Router();
 
 receiptRouter.post('/', (req, res) => {
+    if(req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin"});
     if(req.body.table == undefined || req.body.waiter == undefined)
         return res.status(400).json({error: "Given Params are not correct"});
     let r = req.body;
@@ -18,6 +20,8 @@ receiptRouter.post('/', (req, res) => {
 });
 
 receiptRouter.post('/profit', (req, res) => {
+    if(req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin"});
     if(req.body.start == undefined || req.body.end == undefined)
         return res.status(400).json({error: "Given Params are not correct"});
     let start = req.body.start;
@@ -32,10 +36,14 @@ receiptRouter.post('/profit', (req, res) => {
 });
 
 receiptRouter.post('/receiptPDF', (req, res) => {
+    if(req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin"});
     console.log('Creating receipt PDF for table: ' + req.body.tableNum);
     makeReceiptPDF(req.body.tableNum, new Date(), req.body.items, req.body.total).pipe(res);
 });
 receiptRouter.post('/profitPDF', (req, res) => {
+    if(req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin"});
     console.log('Creating profit PDF between : ' + req.body.start + ' and ' + req.body.end);
     makeProfitPDF(req.body.start,
         req.body.end,

@@ -28,6 +28,8 @@ const user = __importStar(require("../Models/User"));
 const express = require('express');
 exports.userRouter = express.Router();
 exports.userRouter.get("/", (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     user.getModel().find({}).then((users) => {
         return res.status(200).json(users);
     }).catch((err) => {
@@ -35,6 +37,8 @@ exports.userRouter.get("/", (req, res) => {
     });
 });
 exports.userRouter.post("/", (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     if (req.body.email == undefined || req.body.password == undefined || req.body.username == undefined ||
         (req.body.role != 'Cashier' && req.body.role != 'Waiter' && req.body.role != 'Cook' && req.body.role != 'Bartender'))
         return res.status(400).json({ error: "Params given are not correct" });
@@ -50,6 +54,8 @@ exports.userRouter.post("/", (req, res) => {
 });
 exports.userRouter.delete("/:email", (req, res) => {
     var _a;
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     const email = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.email;
     user.getModel().deleteOne({ email: email }).then((user) => {
         return res.status(200).json(user);

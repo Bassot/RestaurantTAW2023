@@ -10,6 +10,7 @@ export interface User extends mongoose.Document {
     digest: string,  // this is the hashed password (digest of the password)
     setPassword: (pwd:string)=>void,
     validatePassword: (pwd:string)=>boolean,
+    isAdmin: ()=>boolean
 }
 
 var userSchema = new mongoose.Schema<User>( {
@@ -66,6 +67,10 @@ userSchema.methods.validatePassword = function( pwd:string ):boolean {
     hmac.update(pwd);
     var digest = hmac.digest('hex');
     return (this.digest === digest);
+}
+
+userSchema.methods.isAdmin = function (): boolean {
+    return this.role === 'Cashier';
 }
 export function getSchema() { return userSchema; }
 

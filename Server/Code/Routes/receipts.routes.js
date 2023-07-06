@@ -29,6 +29,8 @@ const pdfService_1 = require("../Services/pdfService");
 const express = require('express');
 exports.receiptRouter = express.Router();
 exports.receiptRouter.post('/', (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     if (req.body.table == undefined || req.body.waiter == undefined)
         return res.status(400).json({ error: "Given Params are not correct" });
     let r = req.body;
@@ -40,6 +42,8 @@ exports.receiptRouter.post('/', (req, res) => {
     });
 });
 exports.receiptRouter.post('/profit', (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     if (req.body.start == undefined || req.body.end == undefined)
         return res.status(400).json({ error: "Given Params are not correct" });
     let start = req.body.start;
@@ -53,10 +57,14 @@ exports.receiptRouter.post('/profit', (req, res) => {
     });
 });
 exports.receiptRouter.post('/receiptPDF', (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     console.log('Creating receipt PDF for table: ' + req.body.tableNum);
     (0, pdfService_1.makeReceiptPDF)(req.body.tableNum, new Date(), req.body.items, req.body.total).pipe(res);
 });
 exports.receiptRouter.post('/profitPDF', (req, res) => {
+    if (req.auth.role != 'Cashier')
+        return res.status(401).json({ error: "You are not an admin" });
     console.log('Creating profit PDF between : ' + req.body.start + ' and ' + req.body.end);
     (0, pdfService_1.makeProfitPDF)(req.body.start, req.body.end, req.body.receipts, new Date(), req.body.total, req.body.itStatistics, req.body.waitStatistics).pipe(res);
 });

@@ -10,5 +10,4 @@ ENV DBHOST mongo
 #RUN npm run compile
 
 # CMD commands are executing after the volumes' mounting
-CMD npm i
 CMD npm run start

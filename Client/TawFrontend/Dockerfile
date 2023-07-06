@@ -7,6 +7,6 @@ EXPOSE 4200
 # working dir
 WORKDIR /app/
 
-CMD npm install && ng serve --host 0.0.0.0 --poll 1
-#CMD npm install --save-dev @angular-devkit/build-angular
-#CMD ng serve --host 0.0.0.0 --poll 1
+# ng start = npm i && ng serve
+CMD ng start
+
